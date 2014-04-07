@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 
 <html lang="en">
@@ -38,16 +37,6 @@
 		    google.setOnLoadCallback(drawGauge);
 		</script>
 
-		<script type="text/javascript">
-			function printTextFile() {
-				var filename = document.getElementById("files").value;
-
-				elem = document.getElementById("textfile_out");
-				
-
-				elem.innerHTML = filename;
-			}
-		</script>
 
 	</head>
 
@@ -71,14 +60,13 @@
 		<div id="gauge" align='center'></div>
 
 
-		<select id="files">
-			<option value="index.php">index</option>
-			<option value="guage.js">gauge</option>
-			<option value="dbSetup.sql">database</option>
-		</select>
-		<button onclick="printTextFile()">Print It</button>
-		
-		<p id="textfile_out"> </p>
+		<?php 
+			echo"<p>";
+			//echo exec("notepad.exe");
+			echo exec("timecmd long");
+			echo "</p>";
+		?>
+
 	</body>
 
 
