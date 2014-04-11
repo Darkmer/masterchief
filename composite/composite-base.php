@@ -1,18 +1,27 @@
 <?php
-//IComponent.php
-interface IComponent
+
+interface CourseBuilder
 {
-    public function operation();
-    public function add(IComponent $child);
-    public function remove(IComponent $cchild);
-    public function getChild($someInt);
+
+
+}
+
+//Composite Pattern Interface
+interface Lesson
+{
+    public function run();
+    public function add(IComponent $feature);
+    public function remove(IComponent $feature);
+    public function getFeature($someInt);
     public function getLevel();
 
 }
 
-interface IResponsibility
+//Chain of Responsibility  Interface
+//Lesson ordering may matter when assessing performance and giving out badges
+interface Performance
 {
-    public function handle($request);
+    public function assess($lesson);
     public function setSuccessor($someInt);
     public function setPredecessor($someInt);
     public function getPredecessor($someInt);
@@ -31,12 +40,12 @@ class Composite implements IComponent
         $this->aChildren=array();
     }
  
-    public function add(IComponent $child)
+    public function add(IComponent $lesson)
     {
-        array_push($this->aChildren,$child);
+        array_push($this->aChildren,$lesson);
     }
  
-    public function remove(IComponent $child)
+    public function remove(IComponent $lesson)
     {
         //Code to remove component
     }
