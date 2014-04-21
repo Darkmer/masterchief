@@ -1,0 +1,22 @@
+#login
+{
+	width: 20%;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	border-width: 2px;
+	border-color: black;
+	border-style: solid;
+	border-radius: 10px;
+}
+
+#formTable
+{
+	margin-left: auto;
+	margin-right: auto;
+}
+
+input
+{
+	margin: 7px;
+}
