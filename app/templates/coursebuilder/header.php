@@ -35,18 +35,23 @@
 	            <span class="icon-bar"></span>
 	            <span class="icon-bar"></span>
 	          </button>
-	          <a class="navbar-brand" href="#">Project name</a>
+	          <a class="navbar-brand" href="<?php echo url::get_root();?>">Rensselaer Course Builder</a>
 	        </div>
 	        <div class="navbar-collapse collapse">
-	          <form class="navbar-form navbar-right" role="form">
-	            <div class="form-group">
-	              <input type="text" placeholder="Email" class="form-control">
-	            </div>
-	            <div class="form-group">
-	              <input type="password" placeholder="Password" class="form-control">
-	            </div>
-	            <button type="submit" class="btn btn-success">Sign in</button>
-	          </form>
+	          <ul class="nav navbar-nav navbar-left"> 
+				<li><a href="<?php echo url::get_root();?>authentication" role="button">Registration Test</a></li>
+	          </ul>
+			  <ul class="nav navbar-nav navbar-right">   
+
+		        <li class="dropdown">
+		          <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#"><i class="glyphicon glyphicon-user"></i> Admin <span class="caret"></span></a>
+		          <ul id="g-account-menu" class="dropdown-menu" role="menu">
+		            <li><a href="#">My Profile</a></li>
+		            <li><a href="#">Course Management</a></li>
+		          </ul>
+		        </li>
+		        <li><a href="#"><i class="glyphicon glyphicon-lock"></i> Logout</a></li>
+		      </ul>
 	        </div><!--/.navbar-collapse -->
 	      </div>
 	    </div>
