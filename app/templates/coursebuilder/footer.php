@@ -3,13 +3,14 @@
       <footer>
         <p>&copy; Company 2014</p>
       </footer>
-    </div> <!-- /container -->        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-        <script>window.jQuery || document.write('<script src="<?php echo url::get_template_path();?>js/vendor/jquery-1.11.0.min.js"><\/script>')</script>
+    </div> <!-- /container -->        
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js" type="text/javascript"></script>
+        <script >window.jQuery || document.write('<script src="<?php echo url::get_template_path();?>js/vendor/jquery-1.11.0.min.js"><\/script>')</script>
 
-        <script src="<?php echo url::get_template_path();?>js/vendor/bootstrap.min.js"></script>
+        <script src="<?php echo url::get_template_path();?>js/vendor/bootstrap.min.js" type="text/javascript"></script>
 
-        <script src="<?php echo url::get_template_path();?>js/plugins.js"></script>
-        <script src="<?php echo url::get_template_path();?>js/main.js"></script>
+        <script src="<?php echo url::get_template_path();?>js/plugins.js" type="text/javascript"></script>
+        <script src="<?php echo url::get_template_path();?>js/main.js" type="text/javascript"></script>
 
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
         <script>
