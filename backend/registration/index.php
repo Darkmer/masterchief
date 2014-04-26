@@ -7,8 +7,8 @@
 <head>
 	<meta charset="utf-8"></head>
 	<title> Learning to Program </title>
-	<link rel="stylesheet" type="text/css" href="resources/global.css"></link>
-	<link rel="stylesheet" type="text/css" href="resources/index.css"></link>
+	<link rel="stylesheet" type="text/css" href="css/global.css"></link>
+	<link rel="stylesheet" type="text/css" href="css/index.css"></link>
 </head>
 <body>
 	<h1>Learning to Program!</h1>
