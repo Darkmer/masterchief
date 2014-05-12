@@ -4,10 +4,13 @@
 {% load metron_tags %}
 {% load i18n %}
 
-
+<!-- https://github.com/pinax/pinax-theme-bootstrap/blob/master/pinax_theme_bootstrap/templates/theme_bootstrap/base.html 
+-->
 {% block style_base %}
+  <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
     <link href="{% static "pinax/css/theme.css" %}" rel="stylesheet">
     <link href="{% static "css/site.css" %}" rel="stylesheet">
+    <link href="{% static "css/site-main.css" %}" rel="stylesheet">
     {% block extra_style %}{% endblock %}
 {% endblock %}
 
@@ -16,6 +19,11 @@
     {% block extra_head %}{% endblock %}
 {% endblock %}
 
+{% block nav %}
+<ul class="nav navbar-nav pull-left">
+    <li><a href="{% url 'slide_admin' 0 1 %}">{% trans "Slide Admin" %}</a></li>
+</ul>
+{% endblock %}
 
 {% block footer %}
     {% include "_footer.html" %}
@@ -31,6 +39,8 @@
 {% block script_base %}
     <script src="{% block jquery_src %}{% static "pinax/js/jquery.js" %}{% endblock %}"></script>
     <script src="{% static "js/bootstrap.min.js" %}"></script>
+    <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
     <script src="{% static "pinax/js/theme.js" %}"></script>
+    <script src="{% static "js/site-admin.js" %}"></script>
     {% block extra_script %}{% endblock %}
 {% endblock %}

@@ -1,0 +1,45 @@
+/* ==========================================================================
+   Author's custom styles
+   ========================================================================== */
+
+section {
+padding-top: 0px;
+}
+
+.admin ul { 
+	list-style: none; 
+	margin: 0; 
+	padding: 0; 
+}
+.admin ul li { 
+	background: white; 
+	position:relative;
+	margin: 1em 0; 
+	padding: .5em; 
+	border: 2px solid gray; 
+	list-style: none; 
+	padding-left: 42px; 
+}
+.admin ul li .handle { 
+	background: #f8f8f8; 
+	position: absolute; 
+	left: 0; 
+	top: 0; 
+	bottom: 0; 
+	padding:8px; 
+}
+
+.admin .ui-selecting { 
+	background: #eee; 
+}
+.admin .ui-selecting .handle { 
+	background: #ddd; 
+}
+.admin .ui-selected { 
+	background: #def; 
+}
+.admin .ui-selected .handle { 
+	background: #cde; 
+}
+.admin .ui-selectable-helper { 
+	display:none 

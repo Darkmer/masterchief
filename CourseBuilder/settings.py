@@ -33,6 +33,7 @@ TIME_ZONE = "UTC"
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = "en-us"
 
+SITE_MAIN = "CourseBuilder"
 SITE_ID = int(os.environ.get("SITE_ID", 1))
 
 # If you set this to False, Django will make some optimizations so as not
