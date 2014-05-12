@@ -13,6 +13,9 @@ from django.core.exceptions import ObjectDoesNotExist
 # Models Imported
 from models import Teacher
 from models import Course
+from models import Lesson
+from models import Slide
+
 
 
 def course_admin(request):
@@ -26,6 +29,15 @@ def lesson_admin(request, course_id):
 def slide_admin(request, course_id, lesson_id):
 	#Allow users to edit slides and ensure template has a slide preview - that would be cool.
     print "slide admin called"
+    try:
+        auction = Slide.objects.get(pk=auction_id)
+    except ObjectDoesNotExist:
+        return HttpResponseNotFound('Auction Does Not Exist!')
+
+    try:
+        all_auction_lots = Lot.objects.filter(auction=auction)
+    except ObjectDoesNotExist:
+        return HttpResponseNotFound('An auction must have lots before it can have photos!')
     return render(request, 'admin/slide.html', {'course_id': course_id, 'lesson_id': lesson_id})
 
 
