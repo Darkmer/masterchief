@@ -1,7 +1,7 @@
 from django import forms
 from django.core.exceptions import NON_FIELD_ERRORS, PermissionDenied
 
-from webservices.models import Teacher, Course, Lesson, Slide
+from models import Teacher, Course, Lesson, Slide
 
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Permission
@@ -20,19 +20,21 @@ class CourseForm(forms.ModelForm):
 
 class LessonForm(forms.ModelForm):
     course_id = forms.IntegerField(widget=forms.HiddenInput())
-    name = forms.TextField(max_length=255, required=True)
-    description = forms.TextField(max_length=1000)
-    position = forms.IntegerField(max_length=100, required=True, widget=forms.HiddenInput())
+    name = forms.CharField(max_length=255, required=True, widget=forms.Textarea)
+    description = forms.CharField(max_length=1000, widget=forms.Textarea)
+    position = forms.IntegerField(required=True, widget=forms.HiddenInput())
 
     class Meta:
         model = Lesson
-        fields=['lesson_id', 'position', 'googleStyles']
+        fields=['course_id', 'name' , 'description' , 'position']
 
 class SlideForm(forms.ModelForm):
     lesson_id = forms.IntegerField(widget=forms.HiddenInput())
-    position = forms.IntegerField(max_length=100, required=True, widget=forms.HiddenInput())
+    title = forms.CharField(max_length=255, widget=forms.Textarea)
+    content = forms.CharField(widget=forms.Textarea)
+    position = forms.IntegerField(required=True, widget=forms.HiddenInput())
     googleStyles = forms.CharField(max_length=75, required=False)
 
     class Meta:
         model = Slide
-        fields=['lesson_id', 'position', 'googleStyles']
+        fields=['lesson_id', 'title', 'content', 'position', 'googleStyles']

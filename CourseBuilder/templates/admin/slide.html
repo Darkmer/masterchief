@@ -8,7 +8,7 @@
     {% if user.is_authenticated %}
     <div class="admin">
         <div class="page-header">
-          <h1>Administration <small>Courses or Lessons or Slides</small></h1>
+          <h1>Administration <small>Lesson Slides</small></h1>
         </div>
       <!-- Example row of columns -->
       <div class="row">
@@ -27,13 +27,13 @@
                 </form>
                 <hr>
                 <ul id="sortable">
-                  <li>slide 1</li>
-                  <li>slide 2</li>
-                  <li>slide 3</li>
-                  <li>slide 4</li>
-                  <li>slide 5</li>
-                  <li>slide 6</li>
-                  <li>slide 7</li>
+                  {% if slides %}
+                    {% for slide in slides %}
+                  <li>Slide {{ forloop.counter }} {{ slide.title }}</li> 
+                    {% endfor %}
+                  {% else %}
+                  <li>No slides exist yet...</li>
+                  {% endif %}
                 </ul>
               </div>
             </div>
@@ -44,6 +44,12 @@
                 <h3 class="panel-title">The Form in Question</h3>
               </div>
               <div class="panel-body">
+
+                <div class="form-group">
+                {% csrf_token %}
+                {{ form.as_p }}
+                </div><!--end control-group-->
+                <!--
                 <form role="form">
                   <div class="form-group">
                     <label for="exampleInputEmail1">Email address</label>
@@ -63,6 +69,7 @@
                 <span> - OR - </span>
                 <button type="submit" class="btn btn-success">Create</button>
                 </form>
+              -->
               </div>
             </div>
         </div>

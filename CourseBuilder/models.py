@@ -2,42 +2,11 @@ from django.db import models
 from django.forms import ModelForm
 from django.contrib.auth.models import User
 
-'''
-Database
-
-- Users
-  - email
-  - password
-  - joinDate
-  - firstName
-  - lastName
-  - city
-  - state
-- Courses
-  - course_id
-  - name
-  - starteDate
-  - endDate
-- Lessons
-  - lesson_id
-  - title
-  - description
-- Slides
-  - slide_id
-  - lesson_id
-  - layoutType (string)
-  - slidePosition
-- Content
-  - slide_id
-  - content_id
-  - text (html, css)
-'''
-
 class Teacher(models.Model):
-  teacher_id = models.OneToOneField(User)
+  teacher = models.OneToOneField(User)
 
   def __unicode__(self):
-    return self.firstName + " " + self.lastName
+    return self.teacher.first_name + " " + self.teacher.last_name
 
 class Course(models.Model):
   teacher = models.ForeignKey(Teacher)
@@ -62,10 +31,10 @@ class Lesson(models.Model):
 
 class Slide(models.Model):
   lesson_id = models.ForeignKey(Lesson)
+  title = models.TextField(max_length=255)  
+  content = models.TextField()
   position = models.IntegerField()
   googleStyles = models.CharField(max_length=75)
 
-class Content(models.Model):
-  slide_id = models.ForeignKey(Slide)
-  text = models.TextField()
-
+  def __unicode__(self):
+    return self.title

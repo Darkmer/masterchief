@@ -17,9 +17,9 @@ urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # ADMIN COURSE MANAGEMENT TOOL
 urlpatterns += patterns('CourseBuilder.views',
-    url(r'^admin/course_management/$', 'course_admin', name="course_admin"),
-    url(r'^admin/course_management/(?P<course_id>\d+)/lessons/$', 'lesson_admin', name="lesson_admin"),
-    url(r'^admin/course_management/(?P<course_id>\d+)/lessons/(?P<lesson_id>\d+)/$', 'slide_admin', name="slide_admin"),
+    url(r'^course_management/$', 'course_admin', name="course_admin"),
+    url(r'^course_management/(?P<course_id>\d+)/lessons/$', 'lesson_admin', name="lesson_admin"),
+    url(r'^course_management/(?P<course_id>\d+)/lessons/(?P<lesson_id>\d+)/$', 'slide_admin', name="slide_admin"),
     # AJAX URLS
     (r'^course_admin_actions/$', 'course_admin_actions'),
     (r'^lesson_admin_actions/$', 'lesson_admin_actions'),

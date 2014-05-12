@@ -11,34 +11,48 @@ from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 
 # Models Imported
-from models import Teacher
-from models import Course
-from models import Lesson
-from models import Slide
+from models import Teacher, Course, Lesson, Slide
+
+from forms import CourseForm, LessonForm, SlideForm
 
 
 
 def course_admin(request):
     print "course admin called"
-    return render(request, 'admin/course.html', {})
+    return render(request, 'admin/course.html', {'form': CourseForm(), 'courses' : Course.objects.all(), })
 
 def lesson_admin(request, course_id):
     print "Lesson admin called"
-    return render(request, 'admin/lesson.html', {'course_id': course_id})
+    try:
+        course = Course.objects.get(pk=course_id)
+    except ObjectDoesNotExist:
+        return HttpResponseNotFound('No Course Exists!')
+
+    try:
+        lessons = Lesson.objects.filter(course_id=course_id)
+    except ObjectDoesNotExist:
+        return HttpResponseNotFound('No Slides Exist Yet For This Course')
+
+    return render(request, 'admin/lesson.html', {'course_id': course_id, 'lessons' : lessons.objects.all(), 'form': LessonForm()})
 
 def slide_admin(request, course_id, lesson_id):
 	#Allow users to edit slides and ensure template has a slide preview - that would be cool.
     print "slide admin called"
     try:
-        auction = Slide.objects.get(pk=auction_id)
+        course = Course.objects.get(pk=course_id)
     except ObjectDoesNotExist:
-        return HttpResponseNotFound('Auction Does Not Exist!')
+        return HttpResponseNotFound('No Course Exists!')
 
     try:
-        all_auction_lots = Lot.objects.filter(auction=auction)
+        slides = Slide.objects.filter(lesson_id=lesson_id)
     except ObjectDoesNotExist:
-        return HttpResponseNotFound('An auction must have lots before it can have photos!')
-    return render(request, 'admin/slide.html', {'course_id': course_id, 'lesson_id': lesson_id})
+        return HttpResponseNotFound('No Slides Exist Yet For This Course')
+
+    return render(request, 'admin/slide.html', {
+        'course_id': course_id, 
+        'lesson_id': lesson_id,
+        'slides' : slides.objects.all(), 
+        'form': SlideForm()})
 
 
 #ADMIN AJAX CALLS
