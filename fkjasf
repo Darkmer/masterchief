@@ -1,0 +1,110 @@
+commit 680cc6f177d8f9e46cbdd3f5d1a911857faa572d
+Author: Darkmer <danfelizardo@gmail.com>
+Date:   Sun May 11 22:08:49 2014 -0400
+
+    UHHHHHH
+    
+    All gone
+
+commit 9528138607389cd39706116f022b0923c62fe629
+Author: Aaron Tobias <tobias613.aaron@gmail.com>
+Date:   Sat Apr 26 18:02:12 2014 -0400
+
+    added registration and login views, need to be modified and synced with database
+
+commit 717604925d4eb7c35b169346e45c97bd0a763867
+Author: Aaron Tobias <tobias613.aaron@gmail.com>
+Date:   Sat Apr 26 16:50:12 2014 -0400
+
+    mvc is migrated, development is ready
+
+commit e0a1efdb5d8b3030dc975c3a89a30897054ee1bb
+Author: Aaron Tobias <tobias613.aaron@gmail.com>
+Date:   Sat Apr 26 14:40:54 2014 -0400
+
+    mvc framework almost configured, problem with template javascript
+
+commit 1527dde158829540f94a5976ccd30c9e9e8c9255
+Author: Aaron Tobias <tobias613.aaron@gmail.com>
+Date:   Sat Apr 26 00:51:09 2014 -0400
+
+    starting migration process to simple mvc
+
+commit d5d6c6e3786b7413b0fca3799ee83eeb2934c105
+Author: Aaron Tobias <tobias613.aaron@gmail.com>
+Date:   Fri Apr 25 22:14:48 2014 -0400
+
+    entire folder structure reorganized, tobias preparing for front end development, backend folder is created and partitioned accordingly
+
+commit dd22d2dfaa19bc1ff81432d611a77607fadecf80
+Author: Altan Gulen <gulenak@gmail.com>
+Date:   Sun Apr 20 23:10:13 2014 -0400
+
+    Add login/register module and DB creation script
+
+commit 9714d1f0f0d6a5b4e3d598a90651db432fd611b4
+Author: Dan <danfelizardo@gmail.com>
+Date:   Thu Apr 17 20:05:52 2014 -0400
+
+    Added 2 lessons in power point form
+
+commit 8e1598b4febdf2cad96a71665ddc55e7aac9a4cc
+Author: Aaron Tobias <tobias613.aaron@gmail.com>
+Date:   Fri Apr 11 16:01:52 2014 -0400
+
+    added design patterns to be used for course and lesson builder
+
+commit 5e25f080140b33fd50ef6319b967889dfc09215c
+Merge: 1456dd5 ce227b2
+Author: Aaron Tobias <tobias613.aaron@gmail.com>
+Date:   Thu Apr 10 23:16:01 2014 -0400
+
+    Merge branch 'master' of https://github.com/Darkmer/masterchief
+
+commit 1456dd503ebcd87a68deddcc75036f3d21205ae5
+Author: Aaron Tobias <tobias613.aaron@gmail.com>
+Date:   Thu Apr 10 23:15:18 2014 -0400
+
+    updated readme, building composite pattern integrated with chain of responsibility for course hierarchies and management of perfomance.
+
+commit ce227b2ded939dc2f359b6f87a840dfbc647d2fe
+Author: Dan <danfelizardo@gmail.com>
+Date:   Sun Apr 6 20:18:59 2014 -0400
+
+    Added in PHP to run a timecmd.bat which times the given command. It currently uses a long.bat which just takes about 2 seconds to finish but can be replaced with our algorithms in the future
+
+commit a6210bf2be2693d4bc58ac8f6590a649ab4b2cf7
+Author: Dan <danfelizardo@gmail.com>
+Date:   Sat Apr 5 20:53:11 2014 -0400
+
+    Added some javascript and some PHP that tries to open a file. Currently it passes the filename to the javascript and prints the filename
+
+commit 6603868c8b43809888ae393bef68a4fcd071b051
+Author: Dan <danfelizardo@gmail.com>
+Date:   Thu Apr 3 18:37:43 2014 -0400
+
+    cleaning up
+
+commit 9ba2480b9786998102579425fa77f7c053faf251
+Author: Dan <danfelizardo@gmail.com>
+Date:   Thu Apr 3 18:27:03 2014 -0400
+
+    Added the progress gauge, looks like google API for visualization is going to work for us
+
+commit 031948e006de1648b8d9cd83bbe694700b5080f7
+Author: Dan <danfelizardo@gmail.com>
+Date:   Thu Apr 3 17:50:03 2014 -0400
+
+    Added index.html and the sql code
+
+commit 3bc60b36e08a3cd7c5341e33af1f6dc118f93159
+Author: Dan <danfelizardo@gmail.com>
+Date:   Wed Mar 19 22:45:09 2014 -0400
+
+    Adding bubblesort.c skeleton
+
+commit 92bb47ab5b612db630d490f4fb3c946893a9b95a
+Author: Dan <danfelizardo@gmail.com>
+Date:   Wed Mar 19 19:17:08 2014 -0700
+
+    Initial commit
