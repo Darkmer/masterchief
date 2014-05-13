@@ -1,4 +1,4 @@
-{% extends "../site_base.html" %}
+{% extends "site_base.html" %}
 
 {% load i18n %}
 
@@ -7,37 +7,43 @@
 {% block body %}
     {% if user.is_authenticated %}
         <div class="page-header">
-          <h1>Administration <small>Courses or Lessons or Slides</small></h1>
+          <h1>Courses</h1>
         </div>
       <!-- Example row of columns -->
       <div class="row">
         <div class="col-md-5">
-
             <div class="panel panel-default">
               <div class="panel-heading">
-                <h3 class="panel-title">Reorder and Select Elements</h3>
+                <h3 class="panel-title">Currently Available Courses</h3>
               </div>
               <div class="panel-body">
                 <form method="get" autocomplete="off" role="search">
-                   <div class="form-group col-md-8">
+                   <!--<div class="form-group col-md-8">
                         <input id ="q" name="q" type="text" class="form-control" placeholder="Search">
                     </div>
-                    <button type="submit" class="btn btn-primary">Create New</button>
+                    <button type="submit" class="btn btn-primary">Create New</button>-->
                 </form>
                 <hr>
-                <ul id="sortable">
-                  <li>slide 1</li>
-                  <li>slide 2</li>
-                  <li>slide 3</li>
-                  <li>slide 4</li>
-                  <li>slide 5</li>
-                  <li>slide 6</li>
-                  <li>slide 7</li>
+                
+                <ul>
+                  {% if courses %}
+                      {% for course in courses %}
+                        <p>
+                          <li><a href="{{course.id}}/lessons">{{ course.name }}</a></li>
+                          <ul>                            
+                            <li>{{course.teacher}}</li> 
+                            <li>{{course.startDate}} - {{course.endDate}}</li>
+                          </ul>
+                        </p>
+                      {% endfor %}
+                    {% else %}
+                    <li>No courses exist yet...</li>
+                  {% endif %}
                 </ul>
               </div>
             </div>
         </div>
-        <div class="col-md-5">
+        <!--<div class="col-md-5">
             <div class="panel panel-default">
               <div class="panel-heading">
                 <h3 class="panel-title">The Form in Question</h3>
@@ -64,12 +70,10 @@
                 </form>
               </div>
             </div>
-        </div>
+        </div>-->
 
       </div>
-
       <hr>
     {% else %}
-
     {% endif %}
 {% endblock %}

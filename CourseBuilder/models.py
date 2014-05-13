@@ -8,6 +8,7 @@ class Teacher(models.Model):
   def __unicode__(self):
     return self.teacher.first_name + " " + self.teacher.last_name
 
+
 class Course(models.Model):
   teacher = models.ForeignKey(Teacher)
   name = models.TextField(max_length=50)

@@ -82,12 +82,21 @@ def slide_admin_actions(request, slide_id):
 #APP USER views
 def course_view(request):
     print "course view called"
-    courseList = Course.objects.order_by()[:2]	
-    return render(request, 'view/course.html', { 'courseList': courseList })
+    courses = Course.objects.all()	
+    return render(request, 'view/course.html', { 'courses': courses })
 
 def lesson_view(request, course_id):
-    print "lesson view called"
-    return render(request, 'view/lesson.html', {'course_id': course_id})
+    print "lesson view called - "
+    try:
+        course = Course.objects.get(pk=course_id)
+    except ObjectDoesNotExist:
+        return HttpResponseNotFound('No Course Exists!')
+    try:
+        lessons = Lesson.objects.filter(course_id=course_id)
+    except ObjectDoesNotExist:
+        return HttpResponseNotFound('No Slides Exist Yet For This Course')
+
+    return render(request, 'view/lesson.html', {'course': course, 'lessons' : lessons.all()})
 
 def slideshow_view(request, course_id, lesson_id):
 	#Generate Google SlideShow view for user

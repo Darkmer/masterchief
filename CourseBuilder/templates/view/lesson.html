@@ -1,4 +1,4 @@
-{% extends "../site_base.html" %}
+{% extends "site_base.html" %}
 
 {% load i18n %}
 
@@ -7,16 +7,16 @@
 {% block body %}
     {% if user.is_authenticated %}
         <div class="page-header">
-          <h1>Administration <small>Courses or Lessons or Slides</small></h1>
+          <h1>{{course.name}} - Lessons</h1>
         </div>
       <!-- Example row of columns -->
       <div class="row">
         <div class="col-md-5">
 
             <div class="panel panel-default">
-              <div class="panel-heading">
+              <!--<div class="panel-heading">
                 <h3 class="panel-title">Reorder and Select Elements</h3>
-              </div>
+              </div>-->
               <div class="panel-body">
                 <form method="get" autocomplete="off" role="search">
                    <div class="form-group col-md-8">
@@ -26,13 +26,18 @@
                 </form>
                 <hr>
                 <ul id="sortable">
-                  <li>slide 1</li>
-                  <li>slide 2</li>
-                  <li>slide 3</li>
-                  <li>slide 4</li>
-                  <li>slide 5</li>
-                  <li>slide 6</li>
-                  <li>slide 7</li>
+                  {% if lessons %}
+                      {% for lesson in lessons %}
+                        <p>
+                          <li>Lesson #{{lesson.position}} - {{ lesson.name }}</li>
+                          <ul>                            
+                            <li>{{lesson.description}}</li>
+                          </ul>
+                        </p>
+                      {% endfor %}
+                    {% else %}
+                    <li>No lessons exist for this course...</li>
+                  {% endif %}
                 </ul>
               </div>
             </div>

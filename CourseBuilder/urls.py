@@ -31,5 +31,6 @@ urlpatterns += patterns('CourseBuilder.views',
 urlpatterns += patterns('CourseBuilder.views',
     url(r'^courses/$', 'course_view', name="course_view"),
     url(r'^courses/(?P<course_id>\d+)/lessons/$', 'lesson_view', name="lesson_view"),
+    #url(r'^courses/(?P<course_id>\d+)/(?P<lesson_id>\d+)/$', 'slide_view', name="slide_view"),
 )
 
