@@ -12,71 +12,146 @@
         </div>
       <!-- Example row of columns -->
       <div class="row">
-        <div class="col-md-5">
-
+        <div class="col-md-12">
             <div class="panel panel-default">
               <div class="panel-heading">
-                <h3 class="panel-title">Reorder and Select Elements</h3>
+               <!--  <h3 class="panel-title">The Form in Question</h3> -->
+                <button id="newtab" class="btn btn-primary">New Course</button>
+                <button class="btn btn-secondary">Update Order</button>
               </div>
               <div class="panel-body">
-                <form method="get" autocomplete="off" role="search">
-                   <div class="form-group col-md-8">
-                        <input id ="q" name="q" type="text" class="form-control" placeholder="Search">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Create New</button>
-                </form>
-                <hr>
-                <ul id="sortable">
+                <div class="container-fluid">
+                    <ul class="nav nav-tabs marginBottom" id="admin-content-tabs">
+
                   {% if courses %}
                     {% for course in courses %}
-                  <li>course {{ forloop.counter }} {{ course.name }}</li> 
+                  
+                  <li class={% if forloop.counter == 1 %}"active"{% else %}""{% endif %}><a href="#tab-{{ forloop.counter }}"><button class="close closeTab" type="button">×</button>{{ course.name }}</a></li>
                     {% endfor %}
-                  {% else %}
-                  <li>No courses exist yet...</li>
                   {% endif %}
-                </ul>
+                    </ul>
+                    <div class="row">
+                      <div class="tab-content">
+                       {% if courses %}
+                        {% for course in courses %}
+                            <div class={% if forloop.counter == 1 %}"tab-pane active"{% else %}"tab-pane"{% endif %} id="tab-{{ forloop.counter }}">
+
+                            <form class="form-horizontal" role="form" method="post" action="{% url 'course_admin_actions' course.pk %}">
+                              {% csrf_token %}
+
+                              <div class="form-group">
+                              <span class="help-block text-danger">{{ form.teacher.errors }}</span>
+                                <label class="col-sm-2 control-label" for="id_teacher">Teacher:<span class="field-required">*</span>:</label> 
+                                <div class="col-sm-6">
+                                  <select id="id_teacher" class="form-control" name="teacher">
+                                     {% for id, name in form.teacher.field.choices %}
+                                      <option value="{{ id }}">{{ name }}</option>
+                                      {% endfor %}
+                                    </select>
+                                </div>
+                              </div>
+
+                              <div class="form-group">
+                              <span class="help-block text-danger">{{ form.name.errors }}</span>
+                                <label class="col-sm-2 control-label" for="id_name">Name:<span class="field-required">*</span>:</label> 
+                                <div class="col-sm-6">
+                                  <input id="id_name" class="form-control" name="name" maxlength="50" placeholder="Johnathan" type="text" value="{{ form.name.value|default_if_none:"" }}">
+                                </div>
+                              </div>
+
+                              <div class="form-group">
+                              <span class="help-block text-danger">{{ form.startDate.errors }}</span>
+                                <label class="col-sm-2 control-label" for="id_startDate">Startdate:<span class="field-required">*</span>:</label> 
+                                <div class="col-sm-6">
+                                   <input id="id_startDate" class="form-control" name="startDate" type="text" value="{{ form.startDate.value|default_if_none:"" }}">
+                                </div>
+                              </div>
+
+                              <div class="form-group">
+                              <span class="help-block text-danger">{{ form.endDate.errors }}</span>
+                                <label class="col-sm-2 control-label" for="id_endDate">enddate:<span class="field-required">*</span>:</label> 
+                                <div class="col-sm-6">
+                                   <input id="id_endDate" class="form-control" name="endDate" type="text" value="{{ form.endDate.value|default_if_none:"" }}">
+                                </div>
+                              </div>
+
+                              {% if redirect_field_value %}
+                              <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                              {% endif %}
+
+                              <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-6">
+                                <button type="submit" class="btn btn-warning">{% trans "Update Course" %}</button>
+                                </div>
+                              </div>
+                                  <!-- http://stackoverflow.com/questions/9221010/django-form-itereate-over-select-field-in-template-->
+                              <form>
+                            </div>
+                        {% endfor %}
+                      {% endif %}
+                      </div>
+                    </div>
+                </div>
+
               </div>
             </div>
-        </div>
-        <div class="col-md-5">
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <h3 class="panel-title">The Form in Question</h3>
-              </div>
-              <div class="panel-body">
-
-                <div class="form-group">
-                {% csrf_token %}
-                {{ form.as_p }}
-                </div><!--end control-group-->
-                <!--
-                <form role="form">
-                  <div class="form-group">
-                    <label for="exampleInputEmail1">Email address</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
-                  </div>
-                  <div class="form-group">
-                    <label for="exampleInputPassword1">Password</label>
-                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-                  </div>
-                  <div class="form-group">
-                    <label for="exampleInputFile">File input</label>
-                    <input type="file" id="exampleInputFile">
-                    <p class="help-block">Example block-level help text here.</p>
-                  </div>
-                <button type="submit" class="btn btn-danger">Delete</button>
-                <button type="submit" class="btn btn-warning">Update</button>
-                <span> - OR - </span>
-                <button type="submit" class="btn btn-success">Create</button>
-                </form>
-              -->
-              </div>
-            </div>
-        </div>
-
+          </div>
       </div>
 
+    </div>
       <hr>
+      <div class="hidden" id="emptyform">          
+        <form class="form-horizontal" role="form" method="post" action="">
+          {% csrf_token %}
+
+          <div class="form-group">
+          <span class="help-block text-danger">{{ form.teacher.errors }}</span>
+            <label class="col-sm-2 control-label" for="id_teacher">Teacher:<span class="field-required">*</span>:</label> 
+            <div class="col-sm-6">
+              <select id="id_teacher" class="form-control" name="teacher">
+                 {% for id, name in form.teacher.field.choices %}
+                  <option value="{{ id }}">{{ name }}</option>
+                  {% endfor %}
+                </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+          <span class="help-block text-danger">{{ form.name.errors }}</span>
+            <label class="col-sm-2 control-label" for="id_name">Name:<span class="field-required">*</span>:</label> 
+            <div class="col-sm-6">
+              <input id="id_name" class="form-control" name="name" maxlength="50" placeholder="Johnathan" type="text" value="{{ form.name.value|default_if_none:"" }}">
+            </div>
+          </div>
+
+          <div class="form-group">
+          <span class="help-block text-danger">{{ form.startDate.errors }}</span>
+            <label class="col-sm-2 control-label" for="id_startDate">Startdate:<span class="field-required">*</span>:</label> 
+            <div class="col-sm-6">
+               <input id="id_startDate" class="form-control" name="startDate" type="text" value="{{ form.startDate.value|default_if_none:"" }}">
+            </div>
+          </div>
+
+          <div class="form-group">
+          <span class="help-block text-danger">{{ form.endDate.errors }}</span>
+            <label class="col-sm-2 control-label" for="id_endDate">enddate:<span class="field-required">*</span>:</label> 
+            <div class="col-sm-6">
+               <input id="id_endDate" class="form-control" name="endDate" type="text" value="{{ form.endDate.value|default_if_none:"" }}">
+            </div>
+          </div>
+
+          {% if redirect_field_value %}
+          <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+          {% endif %}
+
+          <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-6">
+            <button type="submit" class="btn btn-warning">{% trans "Update Course" %}</button>
+            </div>
+          </div>
+              <!-- http://stackoverflow.com/questions/9221010/django-form-itereate-over-select-field-in-template-->
+          <form>
+      </div>
     </div>
     {% else %}
 

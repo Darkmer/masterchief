@@ -2,11 +2,34 @@
    Author's custom styles
    ========================================================================== */
 
+
+.nav-tabs > li .close {
+    margin: -2px 0 0 10px;
+    font-size: 18px;
+}
+.marginBottom {
+    margin-bottom :1px !important;
+}
+
+.tab-content{
+	padding-top: 30px;
+}
+
+.leftMenu {
+    height :70%;
+    background-color: #E6E6E6;
+    border-right: 2px solid #BFBFBF;
+}
+			
+
+
+/**********************/
+/**** ADMIN ***********/
 section {
 padding-top: 0px;
 }
 
-.admin ul { 
+/* .admin ul { 
 	list-style: none; 
 	margin: 0; 
 	padding: 0; 
@@ -27,7 +50,7 @@ padding-top: 0px;
 	top: 0; 
 	bottom: 0; 
 	padding:8px; 
-}
+} */
 
 .admin .ui-selecting { 
 	background: #eee; 
