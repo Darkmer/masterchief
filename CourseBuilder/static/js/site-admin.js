@@ -112,6 +112,7 @@ $(function () {
           showTab(tabId);
           registerCloseEvent();
       });
+      registerCloseEvent(); //for preloaded slides.
 
   }();
 

@@ -15,11 +15,20 @@ from models import Teacher, Course, Lesson, Slide
 
 from forms import CourseForm, LessonForm, SlideForm
 
+from django.forms.formsets import formset_factory
 
 
 def course_admin(request):
     print "course admin called"
-    return render(request, 'admin/course.html', {'form': CourseForm(), 'courses' : Course.objects.all(), })
+    # instance = get_object_or_404(Coworkers, id=id)
+    max_num = Course.objects.count()
+    course_set = formset_factory(CourseForm, extra=max_num, max_num=max_num)
+    forms = course_set(initial=Course.objects.all().values())
+    # for course in Course.objects.all():
+    #     forms[course.pk] = CourseForm(instance=course, prefix=str(course.pk))
+    #     print CourseForm(instance=course)
+
+    return render(request, 'admin/course.html', {'forms': forms, 'courses' : Course.objects.all() })
 
 def lesson_admin(request, course_id):
     print "Lesson admin called"
