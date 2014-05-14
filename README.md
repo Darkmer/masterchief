@@ -32,7 +32,7 @@ The team has obviously chosen to use Github. If you are here I do not need to te
 ### Issue Tracking and Wiki
 The team decided to use Github's tools for issue tracking and documentation. The issue tracker is just very easy to use and simple. It also allows for assigning issues, tagging issues, and attaching those issues to milestones. Such a convient system that is attached to the repository is too good to pass up. Feel free to go explore that section to get an idea of how useful this Github issue tracker is.
 
-## Installing the webapp
+## Installing
 
 ### LINUX INSTALL INSTRUCTIONS
 
