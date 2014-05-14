@@ -7,7 +7,7 @@
 <!-- https://github.com/pinax/pinax-theme-bootstrap/blob/master/pinax_theme_bootstrap/templates/theme_bootstrap/base.html 
 -->
 {% block style_base %}
-  <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+  	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
     <link href="{% static "pinax/css/theme.css" %}" rel="stylesheet">
     <link href="{% static "css/site.css" %}" rel="stylesheet">
     <link href="{% static "css/site-main.css" %}" rel="stylesheet">
@@ -21,7 +21,8 @@
 
 {% block nav %}
 <ul class="nav navbar-nav pull-left">
-    <li><a href="{% url 'slide_admin' 0 1 %}">{% trans "Slide Admin" %}</a></li>
+	<li><img src="{% static "images/logo.png" %}" alt="CourseBuilder" height=50 width =50 class="img-responsive"></li>    
+	<li><a href="{% url 'slide_admin' 0 1 %}">{% trans "Slide Admin" %}</a></li>
  	<li><a href="/courses">{% trans "Browse Courses" %}</a></li>
 	<li><a href="/about">{% trans "About Us" %}</a></li>
 </ul>
