@@ -1,6 +1,7 @@
 {% extends "site_base.html" %}
 
 {% load i18n %}
+{% load admin_tags %}
 
 {% block head_title %}{% trans "Welcome" %}{% endblock %}
 
@@ -12,73 +13,147 @@
         </div>
       <!-- Example row of columns -->
       <div class="row">
-        <div class="col-md-5">
-
+        <div class="col-md-12">
             <div class="panel panel-default">
               <div class="panel-heading">
-                <h3 class="panel-title">Reorder and Select Elements</h3>
+               <!--  <h3 class="panel-title">The Form in Question</h3> -->
+                <button id="newtab" class="btn btn-primary">New Course</button>
+                <button id="updateOrder" class="btn btn-secondary" data-url="{% url 'course_admin_reorder' %}">Update Order</button>
               </div>
               <div class="panel-body">
-                <form method="get" autocomplete="off" role="search">
-                   <div class="form-group col-md-8">
-                        <input id ="q" name="q" type="text" class="form-control" placeholder="Search">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Create New</button>
-                </form>
-                <hr>
-                <ul id="sortable">
+                <div class="container-fluid">
+                    <ul id="admin-content-tabs" class="nav nav-tabs marginBottom">
+
                   {% if courses %}
                     {% for course in courses %}
-                  <li>course {{ forloop.counter }} {{ course.name }}</li> 
+                  
+                  <li class={% if forloop.counter == 1 %}"active"{% else %}""{% endif %}><a href="#tab-{{ forloop.counter }}" data-subject="{{ course.pk }}"><button class="close closeTab" data-url="{% url 'course_admin_delete' course.pk %}" type="button">×</button><span>{{ course.name }}</span></a></li>
                     {% endfor %}
-                  {% else %}
-                  <li>No courses exist yet...</li>
                   {% endif %}
-                </ul>
+                    </ul>
+                    <div class="row">
+                      <div class="tab-content">
+                       {% if forms %}
+                        {% for tabForm, key in forms %}
+
+                        <div class={% if forloop.first %}"tab-pane active"{% else %}"tab-pane"{% endif %} id="tab-{{ forloop.counter }}">
+
+                            <form id="{{tabForm.prefix}}" class="form-horizontal" role="form" method="post" action="{% url 'course_admin_update' key tabForm.prefix %}">
+                              {{ tabForm.non_field_errors }}
+                              {% csrf_token %}
+                              <div class="form-group">
+                                <label class="col-sm-2 control-label" for="{{tabForm.teacher.auto_id}}">{{ tabForm.teacher.name|capfirst }}:<span class="field-required">*</span>:</label> 
+                                <div class="col-sm-6">
+                                                         
+                                  <select id="{{tabForm.teacher.auto_id}}" class="form-control" name="{{ tabForm.teacher.html_name }}">
+                                   {% for id, name in tabForm.teacher.field.choices %}
+                                    {% if name ==  tabForm.teacher.data %}
+                                     <option value="{{ id }}" selected="selected">{{ name }}</option>
+                                     {% else %}
+                                      <option value="{{ id }}">{{ name }}</option>
+                                      {% endif %}
+                                    {% endfor %}
+                                    </select>
+                                    <span class="text-center text-danger"></span>
+                                </div>
+                              </div>
+
+                              <div class="form-group">
+                                <label class="col-sm-2 control-label" for="{{tabForm.name.auto_id}}">{{ tabForm.name.name|capfirst }}:<span class="field-required">*</span>:</label> 
+                                <div class="col-sm-6">
+                                  <input  id="{{ tabForm.name.auto_id }}" class="form-control tab-subject" name="{{ tabForm.name.html_name }}" maxlength="50" placeholder="Johnathan" type="text" value="{{ tabForm.name.value|default_if_none:"" }}">
+                                  <span class="text-center text-danger"></span>
+                                </div>
+                              </div>
+
+                              {% if redirect_field_value %}
+                              <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                              {% endif %}
+
+                              <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-6">
+
+                                <div class="loading" style="display:none;">
+                                    <span class="load_text">loading...</span>
+                                </div>
+                                <div class="form_ajax" style="display:none;">
+                                    <span>Form submit successfully.</span>
+                                </div>
+                                <div class="form_ajax_error" style="display:none;">
+                                    <span>Can not submit data due to errors.</span>
+                                </div>
+                                <button type="submit" class="btn btn-danger">{% trans "Update Course" %}</button>
+
+                                <a href="{% url 'lesson_admin' key %}" class="btn btn-success">{% trans "View Lessons" %}</a>
+                                </div>
+                              </div>
+                              </form>
+                            </div>
+                        {% endfor %}
+                      {% endif %}
+                      </div>
+                    </div>
+                </div>
+
               </div>
             </div>
-        </div>
-        <div class="col-md-5">
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <h3 class="panel-title">The Form in Question</h3>
-              </div>
-              <div class="panel-body">
-
-                <div class="form-group">
-                {% csrf_token %}
-                {{ form.as_p }}
-                </div><!--end control-group-->
-                <!--
-                <form role="form">
-                  <div class="form-group">
-                    <label for="exampleInputEmail1">Email address</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
-                  </div>
-                  <div class="form-group">
-                    <label for="exampleInputPassword1">Password</label>
-                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-                  </div>
-                  <div class="form-group">
-                    <label for="exampleInputFile">File input</label>
-                    <input type="file" id="exampleInputFile">
-                    <p class="help-block">Example block-level help text here.</p>
-                  </div>
-                <button type="submit" class="btn btn-danger">Delete</button>
-                <button type="submit" class="btn btn-warning">Update</button>
-                <span> - OR - </span>
-                <button type="submit" class="btn btn-success">Create</button>
-                </form>
-              -->
-              </div>
-            </div>
-        </div>
-
+          </div>
       </div>
 
+    </div>
       <hr>
+      <div class="hidden" id="emptyform">          
+        <form id="new" class="form-horizontal" role="form" method="post" action="{% url 'course_admin_update' 0 emptyForm.prefix %}">
+          {% csrf_token %}
+
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="teacher">Teacher:<span class="field-required">*</span>:</label> 
+            <div class="col-sm-6">
+
+              <select id="id_teacher" class="form-control" name="teacher">
+                 {% for id, name in emptyForm.teacher.field.choices %}
+                    <option value="{{ id }}">{{ name }}</option>
+                  {% endfor %}
+                </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="id_name">Name:<span class="field-required">*</span>:</label> 
+            <div class="col-sm-6">
+              <input id="id_name" class="form-control tab-subject" name="name" maxlength="50" placeholder="History" type="text" value="{{ emptyForm.name.value|default_if_none:"" }}">
+            </div>
+          </div>
+
+          {% if redirect_field_value %}
+          <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+          {% endif %}
+
+          <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-6">
+              <div class="loading" style="display:none;">
+                  <span class="load_text">loading...</span>
+              </div>
+              <div class="form_ajax" style="display:none;">
+                  <span>Form submit successfully.</span>
+              </div>
+              <div class="form_ajax_error" style="display:none;">
+                  <span>Can not submit data due to errors.</span>
+              </div>
+              <button type="submit" class="btn btn-primary">{% trans "New Course" %}</button>
+            </div>
+          </div>
+
+          </form>
+      </div>
     </div>
     {% else %}
 
     {% endif %}
+{% endblock %}
+
+{% block extra_script %}
+<script type="text/javascript">
+
+</script>
 {% endblock %}

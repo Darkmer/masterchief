@@ -11,30 +11,24 @@ from django.db.models.base import ObjectDoesNotExist
 
 class CourseForm(forms.ModelForm):
     name = forms.CharField(max_length=50, required=True)
-    startDate = forms.DateTimeField(required=True)
-    endDate = forms.DateTimeField()
 
     class Meta:
         model = Course
-        fields = ['teacher', 'name', 'startDate', 'endDate']
+        fields = ['teacher', 'name']
 
 class LessonForm(forms.ModelForm):
-    course_id = forms.IntegerField(widget=forms.HiddenInput())
     name = forms.CharField(max_length=255, required=True, widget=forms.Textarea)
-    description = forms.CharField(max_length=1000, widget=forms.Textarea)
-    position = forms.IntegerField(required=True, widget=forms.HiddenInput())
+    description = forms.CharField(max_length=1000, widget=forms.Textarea, required=False)
 
     class Meta:
         model = Lesson
-        fields=['course_id', 'name' , 'description' , 'position']
+        fields=['course', 'name' , 'description']
 
 class SlideForm(forms.ModelForm):
-    lesson_id = forms.IntegerField(widget=forms.HiddenInput())
-    title = forms.CharField(max_length=255, widget=forms.Textarea)
-    content = forms.CharField(widget=forms.Textarea)
-    position = forms.IntegerField(required=True, widget=forms.HiddenInput())
+    name = forms.CharField(max_length=255, widget=forms.Textarea)
+    content = forms.CharField(widget=forms.Textarea, required=False)
     googleStyles = forms.CharField(max_length=75, required=False)
 
     class Meta:
         model = Slide
-        fields=['lesson_id', 'title', 'content', 'position', 'googleStyles']
+        fields=['lesson', 'name', 'content', 'googleStyles']
