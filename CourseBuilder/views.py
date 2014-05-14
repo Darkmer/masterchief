@@ -23,54 +23,17 @@ def course_admin(request):
     # instance = get_object_or_404(Coworkers, id=id)
     max_num = Course.objects.count()
     course_set = formset_factory(CourseForm, extra=max_num, max_num=max_num)
+    courses = Course.objects.order_by('position').all()
 
-    keys = [c.pk for c in Course.objects.order_by('position').all()]
-    forms = course_set(initial=Course.objects.order_by('position').all().values())
+    keys = [c.pk for c in courses]
+    forms = course_set(initial=courses.values())
     forms = zip(forms, keys)
-    return render(request, 'admin/course.html', {'forms': forms, 'emptyForm': CourseForm(), 'courses' : Course.objects.order_by('position').all() })
-
-def lesson_admin(request, course_id):
-    print "Lesson admin called"
-    try:
-        course = Course.objects.get(pk=course_id)
-    except ObjectDoesNotExist:
-        return HttpResponseNotFound('No Course Exists!')
-
-    try:
-        lessons = Lesson.objects.filter(course_id=course_id)
-        max_num = Lesson.objects.count()
-        lesson_set = formset_factory(LessonForm, extra=max_num, max_num=max_num)
-
-        keys = [c.pk for c in Lesson.objects.order_by('position').all()]
-        forms = lesson_set(initial=Lesson.objects.order_by('position').all().values())
-        forms = zip(forms, keys)
-    except ObjectDoesNotExist:
-        return HttpResponseNotFound('No Slides Exist Yet For This Lesson')
+    return render(request, 'admin/course.html', {
+        'forms': forms, 
+        'emptyForm': CourseForm(), 
+        'courses' : Course.objects.order_by('position').all() })
 
 
-    return render(request, 'admin/lesson.html', {'forms': forms, 'emptyForm': LessonForm(), 'lessons' : Lesson.objects.order_by('position').all() })
-
-def slide_admin(request, course_id, lesson_id):
-	#Allow users to edit slides and ensure template has a slide preview - that would be cool.
-    print "slide admin called"
-    try:
-        course = Course.objects.get(pk=course_id)
-    except ObjectDoesNotExist:
-        return HttpResponseNotFound('No Course Exists!')
-
-    try:
-        slides = Slide.objects.filter(lesson_id=lesson_id)
-    except ObjectDoesNotExist:
-        return HttpResponseNotFound('No Slides Exist Yet For This Course')
-
-    return render(request, 'admin/slide.html', {
-        'course_id': course_id, 
-        'lesson_id': lesson_id,
-        'slides' : slides.objects.all(), 
-        'form': SlideForm()})
-
-
-#ADMIN AJAX CALLS
 @staff_member_required
 @require_POST
 def course_admin_update(request, course_id, prefix):
@@ -139,16 +102,40 @@ def course_admin_reorder(request):
 
 
 
+def lesson_admin(request, course_id):
+    print "Lesson admin called"
+    try:
+        course = Course.objects.get(pk=course_id)
+    except ObjectDoesNotExist:
+        return HttpResponseNotFound('No Course Exists!')
 
-#ADMIN AJAX CALLS
+    lessons = Lesson.objects.filter(course_id=course_id).order_by('position')
+    max_num = Lesson.objects.count()
+    lesson_set = formset_factory(LessonForm, extra=max_num, max_num=max_num)
+
+    keys = [c.pk for c in lessons]
+    forms = lesson_set(initial=lessons.values())
+    forms = zip(forms, keys)
+
+
+    return render(request, 'admin/lesson.html', {
+                'page_course_id': course.pk, 
+                'page_course_name': course.name, 
+                'forms': forms, 
+                'emptyForm': LessonForm(), 
+                'lessons' : lessons})
+
+
+
 @staff_member_required
 @require_POST
 def lesson_admin_update(request, lesson_id, prefix):
     if request.is_ajax():
-        form = lessonForm(request.POST) if prefix == 'None' else lessonForm(request.POST, prefix=prefix) 
+        form = LessonForm(request.POST) if prefix == 'None' else LessonForm(request.POST, prefix=prefix) 
         if form.is_valid():
             try:
-                lesson = lesson.objects.get(pk=lesson_id)
+                lesson = Lesson.objects.get(pk=lesson_id)
+                lesson.course = form.cleaned_data['course']
                 lesson.description = form.cleaned_data['description']
                 lesson.name = form.cleaned_data['name'] 
                 lesson.save()
@@ -157,14 +144,15 @@ def lesson_admin_update(request, lesson_id, prefix):
             except ObjectDoesNotExist:
                 # create new object
                 position = None
-                if lesson.objects.count() > 0:
-                    lesson = lesson.objects.order_by('-position').all()[0]
+                if Lesson.objects.count() > 0:
+                    lesson = Lesson.objects.order_by('-position').all()[0]
                     position = lesson.position
 
                 else:
                     position = 1
 
-                newlesson = lesson()
+                newlesson = Lesson()
+                newlesson.course = form.cleaned_data['course']
                 newlesson.name = form.cleaned_data['name']
                 newlesson.description = form.cleaned_data['description']
                 newlesson.position = position
@@ -186,7 +174,7 @@ def lesson_admin_update(request, lesson_id, prefix):
 @require_POST
 def lesson_admin_delete(request, lesson_id):
     if request.is_ajax():
-        lesson = lesson.objects.get(pk=lesson_id);
+        lesson = Lesson.objects.get(pk=lesson_id);
         lesson.delete();
         return HttpResponse('OK')
     else:
@@ -200,7 +188,7 @@ def lesson_admin_reorder(request):
         lessonlist = request.POST.getlist('subjectlist[]');
         print lessonlist
         for order, lesson_id in enumerate(lessonlist):     
-            lesson = lesson.objects.get(pk=lesson_id);
+            lesson = Lesson.objects.get(pk=lesson_id);
             lesson.position = order + 1;
             lesson.save()
         return HttpResponse('OK')
@@ -211,7 +199,106 @@ def lesson_admin_reorder(request):
 
 
 
+def slide_admin(request, course_id, lesson_id):
+    #Allow users to edit slides and ensure template has a slide preview - that would be cool.
+    print "slide admin called"
+    try:
+        course = Course.objects.get(pk=course_id)
+    except ObjectDoesNotExist:
+        return HttpResponseNotFound('No Course Exists!')
 
+    try:
+        lesson = Lesson.objects.get(pk=lesson_id)
+    except ObjectDoesNotExist:
+        return HttpResponseNotFound('No Slides Exist Yet For This Course')
+
+    slides = Slide.objects.filter(lesson_id=lesson_id).order_by('position')
+    max_num = Slide.objects.count()
+    slides_set = formset_factory(SlideForm, extra=max_num, max_num=max_num)
+
+    keys = [c.pk for c in slides]
+    forms = slides_set(initial=slides.values())
+    forms = zip(forms, keys)
+
+    return render(request, 'admin/slide.html', {
+        'page_course_id': course.pk, 
+        'page_course_name': course.name, 
+        'page_lesson_id': lesson.pk, 
+        'page_lesson_name': lesson.name, 
+        'forms': forms, 
+        'slides' : slides, 
+        'emptyForm': SlideForm()
+        })
+
+@staff_member_required
+@require_POST
+def slide_admin_update(request, slide_id, prefix):
+    if request.is_ajax():
+        form = SlideForm(request.POST) if prefix == 'None' else SlideForm(request.POST, prefix=prefix) 
+        if form.is_valid():
+            try:
+                slide = Slide.objects.get(pk=slide_id)
+                slide.lesson = form.cleaned_data['lesson']
+                slide.content = form.cleaned_data['content']
+                slide.googleStyles = form.cleaned_data['googleStyles']
+                slide.name = form.cleaned_data['name'] 
+                slide.save()
+                return HttpResponse('OK')
+                
+            except ObjectDoesNotExist:
+                # create new object
+                position = None
+                if Slide.objects.count() > 0:
+                    slide = Slide.objects.order_by('-position').all()[0]
+                    position = slide.position
+
+                else:
+                    position = 1
+
+                newslide = Slide()
+                newslide.lesson = form.cleaned_data['lesson']
+                newslide.name = form.cleaned_data['name']
+                newslide.content = form.cleaned_data['content']
+                newslide.googleStyles = form.cleaned_data['googleStyles']
+                newslide.position = position
+                newslide.save()
+                return HttpResponse('OK')
+        else:
+            errors_dict = {}
+            if form.errors:
+                for error in form.errors:
+                    e = form.errors[error]
+                    field = prefix+"-"+error;
+                    errors_dict[field] = unicode(e)
+            print errors_dict
+            return HttpResponseBadRequest(json.dumps(errors_dict))
+    else:
+        return HttpResponseNotFound('You do not have permission to access this page!')
+
+@staff_member_required
+@require_POST
+def slide_admin_delete(request, slide_id):
+    if request.is_ajax():
+        slide = Slide.objects.get(pk=slide_id);
+        slide.delete();
+        return HttpResponse('OK')
+    else:
+        return HttpResponseNotFound('You do not have permission to access this page!')
+
+
+@staff_member_required
+@require_POST
+def slide_admin_reorder(request):
+    if request.is_ajax():
+        slidelist = request.POST.getlist('subjectlist[]');
+        print slidelist
+        for order, slide_id in enumerate(slidelist):     
+            slide = Slide.objects.get(pk=slide_id);
+            slide.position = order + 1;
+            slide.save()
+        return HttpResponse('OK')
+    else:
+        return HttpResponseNotFound('You do not have permission to access this page!')
 
 
 

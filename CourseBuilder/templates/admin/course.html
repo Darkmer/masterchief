@@ -41,11 +41,10 @@
                             <form id="{{tabForm.prefix}}" class="form-horizontal" role="form" method="post" action="{% url 'course_admin_update' key tabForm.prefix %}">
                               {{ tabForm.non_field_errors }}
                               {% csrf_token %}
-
                               <div class="form-group">
                                 <label class="col-sm-2 control-label" for="{{tabForm.teacher.auto_id}}">{{ tabForm.teacher.name|capfirst }}:<span class="field-required">*</span>:</label> 
                                 <div class="col-sm-6">
-                        
+                                                         
                                   <select id="{{tabForm.teacher.auto_id}}" class="form-control" name="{{ tabForm.teacher.html_name }}">
                                    {% for id, name in tabForm.teacher.field.choices %}
                                     {% if name ==  tabForm.teacher.data %}

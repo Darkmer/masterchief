@@ -9,7 +9,7 @@
     {% if user.is_authenticated %}
     <div class="admin">
         <div class="page-header">
-          <h1>Administration <small>Lessons</small></h1>
+          <h1>Administration <small>{{ page_course_name }} &rarr; Lessons</small></h1>
         </div>
       <!-- Example row of columns -->
       <div class="row">
@@ -41,26 +41,39 @@
                             <form id="{{tabForm.prefix}}" class="form-horizontal" role="form" method="post" action="{% url 'lesson_admin_update' key tabForm.prefix %}">
                               {{ tabForm.non_field_errors }}
                               {% csrf_token %}
+                              <div class="form-group">
+                                <label class="col-sm-2 control-label" for="{{tabForm.course.auto_id}}">{{ tabForm.course.name|capfirst }}<span class="field-required">*</span>:</label> 
+                                <div class="col-sm-6">
+                        
+                                  <select id="{{tabForm.course.auto_id}}" class="form-control" name="{{ tabForm.course.html_name }}">
+                                   {% for id, name in tabForm.course.field.choices %}
+                                    {% if name ==  page_course_name %}
+                                     <option value="{{ id }}" selected="selected">{{ name }}</option>
+                                     {% else %}
+                                      <option value="{{ id }}">{{ name }}</option>
+                                      {% endif %}
+                                    {% endfor %}
+                                    </select>
+                                    <span class="text-center text-danger"></span>
+                                </div>
+                              </div>
 
                               <div class="form-group">
-                                <label class="col-sm-2 control-label" for="{{tabForm.name.auto_id}}">{{ tabForm.name.name|capfirst }}:<span class="field-required">*</span>:</label> 
+                                <label class="col-sm-2 control-label" for="{{tabForm.name.auto_id}}">{{ tabForm.name.name|capfirst }}<span class="field-required">*</span>:</label> 
                                 <div class="col-sm-6">
                                   <input  id="{{ tabForm.name.auto_id }}" class="form-control tab-subject" name="{{ tabForm.name.html_name }}" maxlength="255" placeholder="Johnathan" type="text" value="{{ tabForm.name.value|default_if_none:"" }}">
                                   <span class="text-center text-danger"></span>
                                 </div>
                               </div>
 
+
                               <div class="form-group">
                                 <label class="col-sm-2 control-label" for="{{tabForm.description.auto_id}}">{{ tabForm.description.name|capfirst }}:</label> 
                                 <div class="col-sm-6">
-                                  <textarea id="{{ tabForm.description.auto_id }}" class="form-control tab-subject" name="{{ tabForm.description.html_name }}" maxlength="1000" placeholder="Johnathan" value="{{ tabForm.description.value|default_if_none:"" }}"></textarea>
+                                  <textarea id="{{ tabForm.description.auto_id }}" class="form-control" name="{{ tabForm.description.html_name }}" cols="40" rows="10" placeholder="Johnathan">{{ tabForm.description.value|default_if_none:"" }}</textarea>
                                   <span class="text-center text-danger"></span>
                                 </div>
                               </div>
-
-                              {% if redirect_field_value %}
-                              <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-                              {% endif %}
 
                               <div class="form-group">
                                 <div class="col-sm-offset-2 col-sm-6">
@@ -75,8 +88,8 @@
                                     <span>Can not submit data due to errors.</span>
                                 </div>
     
-                                <button type="submit" class="btn btn-dnager">{% trans "New Lesson" %}</button>
-                                <a href="{% url 'slide_admin' key %}" class="btn btn-success">{% trans "View Slides" %}</a>
+                                <button type="submit" class="btn btn-danger">{% trans "Update Lesson" %}</button>
+                                <a href="{% url 'slide_admin' page_course_id key %}" class="btn btn-success">{% trans "View Slides" %}</a>
                                 </div>
                               </div>
                               </form>
@@ -99,16 +112,32 @@
           {% csrf_token %}
 
           <div class="form-group">
-            <label class="col-sm-2 control-label" for="id_name">Name:<span class="field-required">*</span>:</label> 
+            <label class="col-sm-2 control-label" for="id_lesson">Course<span class="field-required">*</span>:</label> 
+            <div class="col-sm-6">
+              <select id="id_course" class="form-control" name="course">
+                 {% for id, name in emptyForm.course.field.choices %}
+                  {% if name ==  page_course_name %}
+                   <option value="{{ id }}" selected="selected">{{ name }}</option>
+                   {% else %}
+                    <option value="{{ id }}">{{ name }}</option>
+                    {% endif %}
+                  {% endfor %}
+                </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="id_name">Name<span class="field-required">*</span>:</label> 
             <div class="col-sm-6">
               <input id="id_name" class="form-control tab-subject" name="name" maxlength="255" placeholder="History" type="text" value="{{ emptyForm.name.value|default_if_none:"" }}">
             </div>
           </div>
 
+
           <div class="form-group">
-            <label class="col-sm-2 control-label" for="id_description">Description::</label> 
+            <label class="col-sm-2 control-label" for="id_description">Description:</label> 
             <div class="col-sm-6">
-              <textarea id="id_description" class="form-control tab-subject" name="description" maxlength="1000" placeholder="History" value="{{ emptyForm.description.value|default_if_none:"" }}"></textarea> 
+              <textarea id="id_description" class="form-control" name="description" maxlength="1000" placeholder="History"></textarea> 
             </div>
           </div>
 

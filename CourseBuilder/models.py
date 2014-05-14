@@ -22,7 +22,7 @@ class Course(models.Model):
   #   return self.startDate < self.endDate
 
 class Lesson(models.Model):
-  course_id = models.ForeignKey(Course)
+  course = models.ForeignKey(Course)
   name = models.TextField(max_length=255)
   description = models.TextField(max_length=1000, null=True)
   position = models.IntegerField()
@@ -31,7 +31,7 @@ class Lesson(models.Model):
     return self.name
 
 class Slide(models.Model):
-  lesson_id = models.ForeignKey(Lesson)
+  lesson = models.ForeignKey(Lesson)
   name = models.TextField(max_length=255)  
   content = models.TextField(null=True)
   position = models.IntegerField()

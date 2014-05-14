@@ -52,7 +52,7 @@ $(document).ready(function() {
               console.log(form);
               block_form();
           },
-          success: function() {
+          success: function(data) {
               unblock_form();
 
               $(".form_ajax").show();
@@ -162,7 +162,7 @@ $(document).ready(function() {
           var tabId = "tab-" + slideCount; //this is id on tab content div where the 
           slideCount = slideCount + 1; //increment slide count
 
-          $('.nav-tabs').append('<li><a href="#' + tabId + '"><button class="close closeTab" type="button" >×</button><span>'+$(this).html()+'</span></a></li>');
+          $('.nav-tabs').append('<li><a href="#' + tabId + '" data-subject="999"><button class="close closeTab" type="button" >×</button><span>'+$(this).html()+'</span></a></li>');
           $('.tab-content').append('<div class="tab-pane" id="' + tabId + '"></div>');
 
           $("#" +  tabId).html($('#emptyform').html());
