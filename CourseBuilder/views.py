@@ -127,5 +127,5 @@ def slideshow_view(request, course_id, lesson_id):
         return HttpResponseNotFound('No slideshow for this lesson!')
 
     print slides
-    return render(request, 'view/slideshow.html', {'course': course, 'lesson': lesson_id, 'slides' : slides})
+    return render(request, 'view/slideshow.html', {'course': course, 'lesson': lesson, 'slides' : slides})
 
