@@ -10,4 +10,4 @@ def to_int(value):
 
 @register.filter()
 def form_num_prefix(value):
-    return value.split('-')[1]
+    return int(value.split('-')[1])

@@ -34,49 +34,56 @@
                     <div class="row">
                       <div class="tab-content">
                        {% if forms %}
-                        {% for tabForm in forms %}
+                        {% for tabForm, key in forms %}
 
                         <div class={% if forloop.first %}"tab-pane active"{% else %}"tab-pane"{% endif %} id="tab-{{ forloop.counter }}">
+<form id="{{tabForm.prefix}}" class="form-horizontal hidden" role="form" method="post" action="{% url 'course_admin_update' key tabForm.prefix %}">
+                             {% csrf_token %}
+                                 {{ tabForm.non_field_errors }}
+                                    {{ tabForm.as_p }}
+                              <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-6">
 
-                            <form>NEW FORM</form>
-                            <form id="{{tabForm.prefix}}" class="form-horizontal" role="form" method="post" action="{% url 'course_admin_actions' tabForm.prefix|form_num_prefix %}">
-                              
+                                <div id="loading" style="display:none;">
+                                    <span id="load_text">loading...</span>
+                                </div>
+                                <div id="form_ajax" style="display:none;">
+                                    <span>Form submit successfully.</span>
+                                </div>
+                                <div id="form_ajax_error" style="display:none;">
+                                    <span>Can not submit data due to errors.</span>
+                                </div>
+                                <button type="submit" class="btn btn-warning">{% trans "Update Course" %}</button>
+                                </div>
+                              </div>
+                            </form>
+
+                            <form id="{{tabForm.prefix}}" class="form-horizontal" role="form" method="post" action="{% url 'course_admin_update' key tabForm.prefix %}">
+                              {{ tabForm.non_field_errors }}
                               {% csrf_token %}
 
                               <div class="form-group">
                               <span class="help-block text-danger">{{ tabForm.teacher.errors }}</span>
                                 <label class="col-sm-2 control-label" for="{{tabForm.teacher.auto_id}}">{{ tabForm.teacher.name|capfirst }}:<span class="field-required">*</span>:</label> 
                                 <div class="col-sm-6">
-                                  <select id="{{tabForm.teacher.auto_id}}" class="form-control" name="{{tabForm.teacher.name}}">
-                                     {% for id, name in tabForm.teacher.field.choices %}
+                                                                   {{tabForm.teacher.value}}
+                                  <select id="{{tabForm.teacher.auto_id}}" class="form-control" name="{{ tabForm.teacher.html_name }}">
+                                   {% for id, name in tabForm.teacher.field.choices %}
+                                    {% if name ==  tabForm.teacher.data %}
+                                     <option value="{{ id }}" selected="selected">{{ name }}</option>
+                                     {% else %}
                                       <option value="{{ id }}">{{ name }}</option>
-                                      {% endfor %}
+                                      {% endif %}
+                                    {% endfor %}
                                     </select>
                                 </div>
                               </div>
 
                               <div class="form-group">
-                              <span class="help-block text-danger">{{ tabForm.name.errors }}</span>
+                                <span class="help-block text-danger">{{ tabForm.name.errors }}</span>
                                 <label class="col-sm-2 control-label" for="{{tabForm.name.auto_id}}">{{ tabForm.name.name|capfirst }}:<span class="field-required">*</span>:</label> 
                                 <div class="col-sm-6">
-                                  <input id="{{ tabForm.name.auto_id }}" class="form-control" name="{{tabForm.name.name }}" maxlength="50" placeholder="Johnathan" type="text" value="{{ tabForm.name.value|default_if_none:"" }}">
-                                </div>
-                              </div>
-
-
-                              <div class="form-group">
-                              <span class="help-block text-danger">{{ tabForm.startDate.errors }}</span>
-                                <label class="col-sm-2 control-label" for="{{tabForm.startDate.auto_id}}">{{ tabForm.startDate.name|capfirst }}:<span class="field-required">*</span>:</label> 
-                                <div class="col-sm-6">
-                                  <input id="{{ tabForm.startDate.auto_id }}" class="form-control" name="{{tabForm.startDate.name }}" type="text" value="{{ tabForm.startDate.value|default_if_none:"" }}">
-                                </div>
-                              </div>
-
-                              <div class="form-group">
-                              <span class="help-block text-danger">{{ tabForm.endDate.errors }}</span>
-                                <label class="col-sm-2 control-label" for="{{tabForm.endDate.auto_id}}">{{ tabForm.endDate.name|capfirst }}:<span class="field-required">*</span>:</label> 
-                                <div class="col-sm-6">
-                                  <input id="{{ tabForm.endDate.auto_id }}" class="form-control" name="{{tabForm.endDate.name }}" type="text" value="{{ tabForm.endDate.value|default_if_none:"" }}">
+                                  <input  id="{{ tabForm.name.auto_id }}" class="form-control tab-subject" name="{{ tabForm.name.html_name }}" maxlength="50" placeholder="Johnathan" type="text" value="{{ tabForm.name.value|default_if_none:"" }}">
                                 </div>
                               </div>
 
@@ -86,11 +93,20 @@
 
                               <div class="form-group">
                                 <div class="col-sm-offset-2 col-sm-6">
+
+                                <div id="loading" style="display:none;">
+                                    <span id="load_text">loading...</span>
+                                </div>
+                                <div id="form_ajax" style="display:none;">
+                                    <span>Form submit successfully.</span>
+                                </div>
+                                <div id="form_ajax_error" style="display:none;">
+                                    <span>Can not submit data due to errors.</span>
+                                </div>
                                 <button type="submit" class="btn btn-warning">{% trans "Update Course" %}</button>
                                 </div>
                               </div>
-                                  <!-- http://stackoverflow.com/questions/9221010/django-form-itereate-over-select-field-in-template-->
-                              <form>
+                              </form>
                             </div>
                         {% endfor %}
                       {% endif %}
@@ -106,42 +122,27 @@
     </div>
       <hr>
       <div class="hidden" id="emptyform">          
-        <form class="form-horizontal" role="form" method="post" action="">
+        <form id="new" class="form-horizontal" role="form" method="post" action="{% url 'course_admin_update' 0 emptyForm.prefix %}">
           {% csrf_token %}
 
           <div class="form-group">
-          <span class="help-block text-danger">{{ tabForm.teacher.errors }}</span>
+          <span class="help-block text-danger">{{ emptyForm.teacher.errors }}</span>
             <label class="col-sm-2 control-label" for="id_teacher">Teacher:<span class="field-required">*</span>:</label> 
             <div class="col-sm-6">
+
               <select id="id_teacher" class="form-control" name="teacher">
-                 {% for id, name in tabForm.teacher.field.choices %}
-                  <option value="{{ id }}">{{ name }}</option>
+                 {% for id, name in emptyForm.teacher.field.choices %}
+                    <option value="{{ id }}">{{ name }}</option>
                   {% endfor %}
                 </select>
             </div>
           </div>
 
           <div class="form-group">
-          <span class="help-block text-danger">{{ tabForm.name.errors }}</span>
+          <span class="help-block text-danger">{{ emptyForm.name.errors }}</span>
             <label class="col-sm-2 control-label" for="id_name">Name:<span class="field-required">*</span>:</label> 
             <div class="col-sm-6">
-              <input id="id_name" class="form-control" name="name" maxlength="50" placeholder="Johnathan" type="text" value="{{ tabForm.name.value|default_if_none:"" }}">
-            </div>
-          </div>
-
-          <div class="form-group">
-          <span class="help-block text-danger">{{ tabForm.startDate.errors }}</span>
-            <label class="col-sm-2 control-label" for="id_startDate">Startdate:<span class="field-required">*</span>:</label> 
-            <div class="col-sm-6">
-               <input id="id_startDate" class="form-control" name="startDate" type="text" value="{{ tabForm.startDate.value|default_if_none:"" }}">
-            </div>
-          </div>
-
-          <div class="form-group">
-          <span class="help-block text-danger">{{ tabForm.endDate.errors }}</span>
-            <label class="col-sm-2 control-label" for="id_endDate">enddate:<span class="field-required">*</span>:</label> 
-            <div class="col-sm-6">
-               <input id="id_endDate" class="form-control" name="endDate" type="text" value="{{ tabForm.endDate.value|default_if_none:"" }}">
+              <input id="id_name" class="form-control tab-subject" name="name" maxlength="50" placeholder="Johnathan" type="text" value="{{ emptyForm.name.value|default_if_none:"" }}">
             </div>
           </div>
 
@@ -151,11 +152,20 @@
 
           <div class="form-group">
             <div class="col-sm-offset-2 col-sm-6">
-            <button type="submit" class="btn btn-warning">{% trans "New Course" %}</button>
+              <div id="loading" style="display:none;">
+                  <span id="load_text">loading...</span>
+              </div>
+              <div id="form_ajax" style="display:none;">
+                  <span>Form submit successfully.</span>
+              </div>
+              <div id="form_ajax_error" style="display:none;">
+                  <span>Can not submit data due to errors.</span>
+              </div>
+              <button type="submit" class="btn btn-warning">{% trans "New Course" %}</button>
             </div>
           </div>
-              <!-- http://stackoverflow.com/questions/9221010/django-form-itereate-over-select-field-in-template-->
-          <form>
+
+          </form>
       </div>
     </div>
     {% else %}

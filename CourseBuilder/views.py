@@ -2,7 +2,7 @@
 import json
 import CourseBuilder.settings #replace project with the main project folder with settings
 
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound, HttpResponseBadRequest
 from django.contrib.admin.views.decorators import staff_member_required
 from django.views.decorators.http import require_POST
 from django.shortcuts import get_object_or_404, render
@@ -23,12 +23,11 @@ def course_admin(request):
     # instance = get_object_or_404(Coworkers, id=id)
     max_num = Course.objects.count()
     course_set = formset_factory(CourseForm, extra=max_num, max_num=max_num)
-    forms = course_set(initial=Course.objects.all().values())
-    # for course in Course.objects.all():
-    #     forms[course.pk] = CourseForm(instance=course, prefix=str(course.pk))
-    #     print CourseForm(instance=course)
 
-    return render(request, 'admin/course.html', {'forms': forms, 'courses' : Course.objects.all() })
+    keys = [c.pk for c in Course.objects.all()]
+    forms = course_set(initial=Course.objects.all().values())
+    forms = zip(forms, keys)
+    return render(request, 'admin/course.html', {'forms': forms, 'emptyForm': CourseForm(), 'courses' : Course.objects.all() })
 
 def lesson_admin(request, course_id):
     print "Lesson admin called"
@@ -67,10 +66,56 @@ def slide_admin(request, course_id, lesson_id):
 #ADMIN AJAX CALLS
 @staff_member_required
 @require_POST
-def course_admin_actions(request, course_id):
+def course_admin_update(request, course_id, prefix):
     if request.is_ajax():
-    	action = request.POST['action'] #action can be 'update', 'remove', 'new'
-    pass
+        form = CourseForm(request.POST, prefix=prefix) if prefix is 'None' else CourseForm(request.POST)
+        if form.is_valid():
+            try:
+                course = Course.objects.get(pk=course_id)
+                course.teacher = form.cleaned_data['teacher']
+                course.name = form.cleaned_data['name']
+                course.save()
+                return HttpResponse('OK')
+                
+            except ObjectDoesNotExist:
+                # create new object
+                form.save()
+                return HttpResponse('CREATED')
+        else:
+            errors_dict = {}
+            if form.errors:
+                for error in form.errors:
+                    e = form.errors[error]
+                    field = prefix+"-"+error;
+                    errors_dict[field] = unicode(e)
+            print errors_dict
+            return HttpResponseBadRequest(json.dumps(errors_dict))
+    else:
+        return HttpResponseNotFound('You do not have permission to access this page!')
+
+#ADMIN AJAX CALLS
+@staff_member_required
+@require_POST
+def course_admin_delete(request, course_id, prefix):
+    if request.is_ajax():
+        console.log(request.Post);
+        form = CourseForm(request.POST, prefix=prefix)
+        if form.is_valid():
+            return HttpResponse('OK')
+        else:
+            errors_dict = {}
+            if form.errors:
+                for error in form.errors:
+                    e = form.errors[error]
+                    field = prefix+error;
+                    print field
+                    errors_dict[field] = unicode(e)
+                print errors_dict
+            return HttpResponseBadRequest(json.dumps(errors_dict))
+    else:
+        return HttpResponseNotFound('You do not have permission to access this page!')
+
+
 
 @staff_member_required
 @require_POST

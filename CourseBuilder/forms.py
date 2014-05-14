@@ -11,12 +11,10 @@ from django.db.models.base import ObjectDoesNotExist
 
 class CourseForm(forms.ModelForm):
     name = forms.CharField(max_length=50, required=True)
-    startDate = forms.DateTimeField(required=True)
-    endDate = forms.DateTimeField()
 
     class Meta:
         model = Course
-        fields = ['teacher', 'name', 'startDate', 'endDate']
+        fields = ['teacher', 'name']
 
 class LessonForm(forms.ModelForm):
     course_id = forms.IntegerField(widget=forms.HiddenInput())

@@ -26,9 +26,57 @@ $('#admin-content-tabs').sortable();
 
 
 //initilize tabs
-$(function () {
+$(document).ready(function() {
+
   var currentTab;
   var slideCount =  $('.nav-tabs').children().length + 1;
+
+
+      function block_form() {
+          $("#loading").show();
+          $('textarea').attr('disabled', 'disabled');
+          $('input').attr('disabled', 'disabled');
+      }
+
+      function unblock_form() {
+          $('#loading').hide();
+          $('textarea').removeAttr('disabled');
+          $('input').removeAttr('disabled');
+          $('.errorlist').remove();
+      }
+
+      // prepare Options Object for plugin
+      var options = {
+          beforeSubmit: function(form, options) {
+              // return false to cancel submit
+              console.log(options);
+              block_form();
+          },
+          success: function() {
+              unblock_form();
+
+              $("#form_ajax").show();
+              setTimeout(function() {
+                  $("#form_ajax").hide();
+              }, 5000);
+          },
+          error:  function(resp) {
+              unblock_form();
+              $("#form_ajax_error").show();
+              // render errors in form fields
+              var errors = JSON.parse(resp.responseText);
+              for (error in errors) {
+                  var id = '#id_' + error;
+                  console.log($(id).parents('.form-group'));
+                  $(id).parent().siblings('.help-block').html(errors[error]);
+              }
+              setTimeout(function() {
+                  $("#form_ajax_error").hide();
+              }, 5000);
+          },
+      };
+
+      $('.form-horizontal').ajaxForm(options);
 
     //when ever any tab is clicked this method will be call
     $("#admin-content-tabs").on("click", "a", function (e) {
@@ -105,62 +153,24 @@ $(function () {
           $('.tab-content').append('<div class="tab-pane" id="' + tabId + '"></div>');
 
           craeteNewTabAndLoadUrl("", "./", "#" + tabId);
-
+          console.log($('#emptyform').html());
           $("#" +  tabId).html($('#emptyform').html());
 
           $(this).tab('show');
           showTab(tabId);
           registerCloseEvent();
+
+          $("#" +  tabId + " form").ajaxForm(options);
       });
       registerCloseEvent(); //for preloaded slides.
 
   }();
 
 
+    $("div.panel-body").on("keyup", ".tab-subject", function (e) {
+      e.preventDefault();
+      var tabId = $(this).parents(".tab-pane").attr('id');
+       $('#admin-content-tabs a[href="#' + tabId + '"]').html(this.value);
+     });
+
 });
-
-
-
-
-
-
-
-
-    var approval_callback = function(approval_data) {
-        return function(data, textStatus) {
-
-      };
-    };
-
-    $(document).on('submit', '.approval-form', function(event) {
-
-      /* stop form from submitting normally */
-      event.preventDefault();
-
-      /* get some values from elements on the page: */
-      var $form = $( this ),
-          bidder_id = $form.find( 'input[name="bidder-id"]' ).val(),
-          submit_btn = $form.find( 'input[type="submit"]' ),
-          action = submit_btn.val(),
-          status_col = $form.parent().prev(),
-          url = $form.attr( 'action' )
-
-      submit_btn.button('loading');
-      submit_btn.prop('disabled', true);
-
-      /* Send the data using post */
-      var data_closure = {
-          'submit_btn': submit_btn,
-          'status_col': status_col,
-      };
- 
-      /* Send the data using post */
-      var posting = $.post( url, {
-        'bidder_id': bidder_id, 'action': action },
-         approval_callback(data_closure),
-         'json'
-      );
-      posting.fail(function() { alert("error"); })
-      .always(function() { console.log('finished'); });
-
-    });
