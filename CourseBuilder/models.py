@@ -38,4 +38,4 @@ class Slide(models.Model):
   googleStyles = models.CharField(max_length=75, null=True)
 
   def __unicode__(self):
-    return self.title
+    return self.name

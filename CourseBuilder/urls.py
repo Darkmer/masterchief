@@ -26,12 +26,15 @@ urlpatterns += patterns('CourseBuilder.views',
     url(r'^course_admin_reorder/$', 'course_admin_reorder', name="course_admin_reorder"),
     
 
-    url(r'^lesson_admin_actions/(?P<lesson_id>\d+)/$', 'lesson_admin_actions', name="lesson_admin_actions"),
-    url(r'^slide_admin_actions/(?P<slide_id>\d+)/$', 'slide_admin_actions', name="slide_admin_actions"),
+    # AJAX URLS
+    url(r'^lesson_admin_update/(?P<lesson_id>\d+)/(?P<prefix>.+)/$', 'lesson_admin_update', name="lesson_admin_update"),
+    url(r'^lesson_admin_delete/(?P<lesson_id>\d+)/$', 'lesson_admin_delete', name="lesson_admin_delete"),
+    url(r'^lesson_admin_reorder/$', 'lesson_admin_reorder', name="lesson_admin_reorder"),
+    
 )
 
 
-# USER COURSE VIEW
+# USER Course VIEW
 urlpatterns += patterns('CourseBuilder.views',
     url(r'^courses/$', 'course_view', name="course_view"),
     url(r'^courses/(?P<course_id>\d+)/lessons/$', 'lesson_view', name="lesson_view"),

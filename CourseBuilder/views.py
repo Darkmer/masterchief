@@ -38,10 +38,17 @@ def lesson_admin(request, course_id):
 
     try:
         lessons = Lesson.objects.filter(course_id=course_id)
-    except ObjectDoesNotExist:
-        return HttpResponseNotFound('No Slides Exist Yet For This Course')
+        max_num = Lesson.objects.count()
+        lesson_set = formset_factory(LessonForm, extra=max_num, max_num=max_num)
 
-    return render(request, 'admin/lesson.html', {'course_id': course_id, 'lessons' : lessons.objects.all(), 'form': LessonForm()})
+        keys = [c.pk for c in Lesson.objects.order_by('position').all()]
+        forms = lesson_set(initial=Lesson.objects.order_by('position').all().values())
+        forms = zip(forms, keys)
+    except ObjectDoesNotExist:
+        return HttpResponseNotFound('No Slides Exist Yet For This Lesson')
+
+
+    return render(request, 'admin/lesson.html', {'forms': forms, 'emptyForm': LessonForm(), 'lessons' : Lesson.objects.order_by('position').all() })
 
 def slide_admin(request, course_id, lesson_id):
 	#Allow users to edit slides and ensure template has a slide preview - that would be cool.
@@ -92,7 +99,7 @@ def course_admin_update(request, course_id, prefix):
                 newcourse.name = form.cleaned_data['name']
                 newcourse.position = position
                 newcourse.save()
-                return HttpResponse('CREATED')
+                return HttpResponse('OK')
         else:
             errors_dict = {}
             if form.errors:
@@ -105,7 +112,6 @@ def course_admin_update(request, course_id, prefix):
     else:
         return HttpResponseNotFound('You do not have permission to access this page!')
 
-#ADMIN AJAX CALLS
 @staff_member_required
 @require_POST
 def course_admin_delete(request, course_id):
@@ -121,7 +127,7 @@ def course_admin_delete(request, course_id):
 @require_POST
 def course_admin_reorder(request):
     if request.is_ajax():
-        courselist = request.POST.getlist('courselist[]');
+        courselist = request.POST.getlist('subjectlist[]');
         print courselist
         for order, course_id in enumerate(courselist):     
             course = Course.objects.get(pk=course_id);
@@ -134,24 +140,80 @@ def course_admin_reorder(request):
 
 
 
+#ADMIN AJAX CALLS
+@staff_member_required
+@require_POST
+def lesson_admin_update(request, lesson_id, prefix):
+    if request.is_ajax():
+        form = lessonForm(request.POST) if prefix == 'None' else lessonForm(request.POST, prefix=prefix) 
+        if form.is_valid():
+            try:
+                lesson = lesson.objects.get(pk=lesson_id)
+                lesson.description = form.cleaned_data['description']
+                lesson.name = form.cleaned_data['name'] 
+                lesson.save()
+                return HttpResponse('OK')
+                
+            except ObjectDoesNotExist:
+                # create new object
+                position = None
+                if lesson.objects.count() > 0:
+                    lesson = lesson.objects.order_by('-position').all()[0]
+                    position = lesson.position
 
+                else:
+                    position = 1
 
+                newlesson = lesson()
+                newlesson.name = form.cleaned_data['name']
+                newlesson.description = form.cleaned_data['description']
+                newlesson.position = position
+                newlesson.save()
+                return HttpResponse('OK')
+        else:
+            errors_dict = {}
+            if form.errors:
+                for error in form.errors:
+                    e = form.errors[error]
+                    field = prefix+"-"+error;
+                    errors_dict[field] = unicode(e)
+            print errors_dict
+            return HttpResponseBadRequest(json.dumps(errors_dict))
+    else:
+        return HttpResponseNotFound('You do not have permission to access this page!')
 
+@staff_member_required
+@require_POST
+def lesson_admin_delete(request, lesson_id):
+    if request.is_ajax():
+        lesson = lesson.objects.get(pk=lesson_id);
+        lesson.delete();
+        return HttpResponse('OK')
+    else:
+        return HttpResponseNotFound('You do not have permission to access this page!')
 
 
 @staff_member_required
 @require_POST
-def lesson_admin_actions(request, lesson_id):
+def lesson_admin_reorder(request):
     if request.is_ajax():
-    	action = request.POST['action'] #action can be 'update', 'remove', 'new'
-    pass
+        lessonlist = request.POST.getlist('subjectlist[]');
+        print lessonlist
+        for order, lesson_id in enumerate(lessonlist):     
+            lesson = lesson.objects.get(pk=lesson_id);
+            lesson.position = order + 1;
+            lesson.save()
+        return HttpResponse('OK')
+    else:
+        return HttpResponseNotFound('You do not have permission to access this page!')
 
-@staff_member_required
-@require_POST
-def slide_admin_actions(request, slide_id):
-    if request.is_ajax():
-    	action = request.POST['action'] #action can be 'update', 'remove', 'new'
-    pass
+
+
+
+
+
+
+
 
 
 

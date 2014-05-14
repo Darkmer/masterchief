@@ -27,7 +27,7 @@
                   {% if courses %}
                     {% for course in courses %}
                   
-                  <li class={% if forloop.counter == 1 %}"active"{% else %}""{% endif %}><a href="#tab-{{ forloop.counter }}" data-course="{{ course.pk }}"><button class="close closeTab" data-url="{% url 'course_admin_delete' course.pk %}" type="button">×</button><span>{{ course.name }}</span></a></li>
+                  <li class={% if forloop.counter == 1 %}"active"{% else %}""{% endif %}><a href="#tab-{{ forloop.counter }}" data-subject="{{ course.pk }}"><button class="close closeTab" data-url="{% url 'course_admin_delete' course.pk %}" type="button">×</button><span>{{ course.name }}</span></a></li>
                     {% endfor %}
                   {% endif %}
                     </ul>
@@ -75,7 +75,7 @@
                                 <div class="col-sm-offset-2 col-sm-6">
 
                                 <div class="loading" style="display:none;">
-                                    <span id="load_text">loading...</span>
+                                    <span class="load_text">loading...</span>
                                 </div>
                                 <div class="form_ajax" style="display:none;">
                                     <span>Form submit successfully.</span>
@@ -83,7 +83,9 @@
                                 <div class="form_ajax_error" style="display:none;">
                                     <span>Can not submit data due to errors.</span>
                                 </div>
-                                <button type="submit" class="btn btn-warning">{% trans "Update Course" %}</button>
+                                <button type="submit" class="btn btn-danger">{% trans "Update Course" %}</button>
+
+                                <a href="{% url 'lesson_admin' key %}" class="btn btn-success">{% trans "View Lessons" %}</a>
                                 </div>
                               </div>
                               </form>
@@ -130,16 +132,16 @@
 
           <div class="form-group">
             <div class="col-sm-offset-2 col-sm-6">
-              <div id="loading" style="display:none;">
-                  <span id="load_text">loading...</span>
+              <div class="loading" style="display:none;">
+                  <span class="load_text">loading...</span>
               </div>
-              <div id="form_ajax" style="display:none;">
+              <div class="form_ajax" style="display:none;">
                   <span>Form submit successfully.</span>
               </div>
-              <div id="form_ajax_error" style="display:none;">
+              <div class="form_ajax_error" style="display:none;">
                   <span>Can not submit data due to errors.</span>
               </div>
-              <button type="submit" class="btn btn-warning">{% trans "New Course" %}</button>
+              <button type="submit" class="btn btn-primary">{% trans "New Course" %}</button>
             </div>
           </div>
 

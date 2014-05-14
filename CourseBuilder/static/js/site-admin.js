@@ -187,14 +187,14 @@ $(document).ready(function() {
 
     $('#updateOrder').click(function (e) {
       
-      var courselist = []
+      var subjectlist = []
       $('#admin-content-tabs a').each(function( index) {
-        courselist.push($(this).data('course'));
+        subjectlist.push($(this).data('subject'));
       });
         var postUrl = $(this).data("url");
 
         if(postUrl){
-          var jqxhr = $.post(postUrl, {courselist: courselist} , function(e) {
+          var jqxhr = $.post(postUrl, {subjectlist: subjectlist} , function(e) {
             alert( "Order Updated Successfully" );
           })
           .fail(function(e) {

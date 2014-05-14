@@ -19,20 +19,18 @@ class CourseForm(forms.ModelForm):
 class LessonForm(forms.ModelForm):
     course_id = forms.IntegerField(widget=forms.HiddenInput())
     name = forms.CharField(max_length=255, required=True, widget=forms.Textarea)
-    description = forms.CharField(max_length=1000, widget=forms.Textarea)
-    position = forms.IntegerField(required=True, widget=forms.HiddenInput())
+    description = forms.CharField(max_length=1000, widget=forms.Textarea, required=False)
 
     class Meta:
         model = Lesson
-        fields=['course_id', 'name' , 'description' , 'position']
+        fields=['name' , 'description']
 
 class SlideForm(forms.ModelForm):
     lesson_id = forms.IntegerField(widget=forms.HiddenInput())
-    title = forms.CharField(max_length=255, widget=forms.Textarea)
-    content = forms.CharField(widget=forms.Textarea)
-    position = forms.IntegerField(required=True, widget=forms.HiddenInput())
+    name = forms.CharField(max_length=255, widget=forms.Textarea)
+    content = forms.CharField(widget=forms.Textarea, required=False)
     googleStyles = forms.CharField(max_length=75, required=False)
 
     class Meta:
         model = Slide
-        fields=['lesson_id', 'title', 'content', 'position', 'googleStyles']
+        fields=['name', 'content', 'googleStyles']

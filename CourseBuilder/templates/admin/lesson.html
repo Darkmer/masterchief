@@ -1,75 +1,142 @@
-{% extends "../site_base.html" %}
+{% extends "site_base.html" %}
 
 {% load i18n %}
+{% load admin_tags %}
 
 {% block head_title %}{% trans "Welcome" %}{% endblock %}
 
 {% block body %}
     {% if user.is_authenticated %}
+    <div class="admin">
         <div class="page-header">
-          <h1>Administration <small>Courses or Lessons or Slides</small></h1>
+          <h1>Administration <small>Lessons</small></h1>
         </div>
       <!-- Example row of columns -->
       <div class="row">
-        <div class="col-md-5">
-
+        <div class="col-md-12">
             <div class="panel panel-default">
               <div class="panel-heading">
-                <h3 class="panel-title">Reorder and Select Elements</h3>
+               <!--  <h3 class="panel-title">The Form in Question</h3> -->
+                <button id="newtab" class="btn btn-primary">New Lesson</button>
+                <button id="updateOrder" class="btn btn-secondary" data-url="{% url 'lesson_admin_reorder' %}">Update Order</button>
               </div>
               <div class="panel-body">
-                <form method="get" autocomplete="off" role="search">
-                   <div class="form-group col-md-8">
-                        <input id ="q" name="q" type="text" class="form-control" placeholder="Search">
+                <div class="container-fluid">
+                    <ul id="admin-content-tabs" class="nav nav-tabs marginBottom">
+
+                  {% if lessons %}
+                    {% for lesson in lessons %}
+                  
+                  <li class={% if forloop.counter == 1 %}"active"{% else %}""{% endif %}><a href="#tab-{{ forloop.counter }}" data-subject="{{ lesson.pk }}"><button class="close closeTab" data-url="{% url 'lesson_admin_delete' lesson.pk %}" type="button">×</button><span>{{ lesson.name }}</span></a></li>
+                    {% endfor %}
+                  {% endif %}
+                    </ul>
+                    <div class="row">
+                      <div class="tab-content">
+                       {% if forms %}
+                        {% for tabForm, key in forms %}
+
+                        <div class={% if forloop.first %}"tab-pane active"{% else %}"tab-pane"{% endif %} id="tab-{{ forloop.counter }}">
+
+                            <form id="{{tabForm.prefix}}" class="form-horizontal" role="form" method="post" action="{% url 'lesson_admin_update' key tabForm.prefix %}">
+                              {{ tabForm.non_field_errors }}
+                              {% csrf_token %}
+
+                              <div class="form-group">
+                                <label class="col-sm-2 control-label" for="{{tabForm.name.auto_id}}">{{ tabForm.name.name|capfirst }}:<span class="field-required">*</span>:</label> 
+                                <div class="col-sm-6">
+                                  <input  id="{{ tabForm.name.auto_id }}" class="form-control tab-subject" name="{{ tabForm.name.html_name }}" maxlength="255" placeholder="Johnathan" type="text" value="{{ tabForm.name.value|default_if_none:"" }}">
+                                  <span class="text-center text-danger"></span>
+                                </div>
+                              </div>
+
+                              <div class="form-group">
+                                <label class="col-sm-2 control-label" for="{{tabForm.description.auto_id}}">{{ tabForm.description.name|capfirst }}:</label> 
+                                <div class="col-sm-6">
+                                  <textarea id="{{ tabForm.description.auto_id }}" class="form-control tab-subject" name="{{ tabForm.description.html_name }}" maxlength="1000" placeholder="Johnathan" value="{{ tabForm.description.value|default_if_none:"" }}"></textarea>
+                                  <span class="text-center text-danger"></span>
+                                </div>
+                              </div>
+
+                              {% if redirect_field_value %}
+                              <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                              {% endif %}
+
+                              <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-6">
+
+                                <div class="loading" style="display:none;">
+                                    <span id="load_text">loading...</span>
+                                </div>
+                                <div class="form_ajax" style="display:none;">
+                                    <span>Form submit successfully.</span>
+                                </div>
+                                <div class="form_ajax_error" style="display:none;">
+                                    <span>Can not submit data due to errors.</span>
+                                </div>
+    
+                                <button type="submit" class="btn btn-dnager">{% trans "New Lesson" %}</button>
+                                <a href="{% url 'slide_admin' key %}" class="btn btn-success">{% trans "View Slides" %}</a>
+                                </div>
+                              </div>
+                              </form>
+                            </div>
+                        {% endfor %}
+                      {% endif %}
+                      </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Create New</button>
-                </form>
-                <hr>
-                <ul id="sortable">
-                  <li>slide 1</li>
-                  <li>slide 2</li>
-                  <li>slide 3</li>
-                  <li>slide 4</li>
-                  <li>slide 5</li>
-                  <li>slide 6</li>
-                  <li>slide 7</li>
-                </ul>
-              </div>
-            </div>
-        </div>
-        <div class="col-md-5">
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <h3 class="panel-title">The Form in Question</h3>
-              </div>
-              <div class="panel-body">
-                <form role="form">
-                  <div class="form-group">
-                    <label for="exampleInputEmail1">Email address</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
-                  </div>
-                  <div class="form-group">
-                    <label for="exampleInputPassword1">Password</label>
-                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-                  </div>
-                  <div class="form-group">
-                    <label for="exampleInputFile">File input</label>
-                    <input type="file" id="exampleInputFile">
-                    <p class="help-block">Example block-level help text here.</p>
-                  </div>
-                <button type="submit" class="btn btn-danger">Delete</button>
-                <button type="submit" class="btn btn-warning">Update</button>
-                <span> - OR - </span>
-                <button type="submit" class="btn btn-success">Create</button>
-                </form>
-              </div>
-            </div>
-        </div>
+                </div>
 
+              </div>
+            </div>
+          </div>
       </div>
 
+    </div>
       <hr>
+      <div class="hidden" id="emptyform">          
+        <form id="new" class="form-horizontal" role="form" method="post" action="{% url 'lesson_admin_update' 0 emptyForm.prefix %}">
+          {% csrf_token %}
+
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="id_name">Name:<span class="field-required">*</span>:</label> 
+            <div class="col-sm-6">
+              <input id="id_name" class="form-control tab-subject" name="name" maxlength="255" placeholder="History" type="text" value="{{ emptyForm.name.value|default_if_none:"" }}">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="id_description">Description::</label> 
+            <div class="col-sm-6">
+              <textarea id="id_description" class="form-control tab-subject" name="description" maxlength="1000" placeholder="History" value="{{ emptyForm.description.value|default_if_none:"" }}"></textarea> 
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-6">
+              <div class="loading" style="display:none;">
+                  <span class="load_text">loading...</span>
+              </div>
+              <div class="form_ajax" style="display:none;">
+                  <span>Form submit successfully.</span>
+              </div>
+              <div class="form_ajax_error" style="display:none;">
+                  <span>Can not submit data due to errors.</span>
+              </div>
+              <button type="submit" class="btn btn-primary">{% trans "New Lesson" %}</button>
+            </div>
+          </div>
+
+          </form>
+      </div>
+    </div>
     {% else %}
 
     {% endif %}
+{% endblock %}
+
+{% block extra_script %}
+<script type="text/javascript">
+
+</script>
 {% endblock %}
