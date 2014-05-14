@@ -82,7 +82,11 @@ def slide_admin_actions(request, slide_id):
 #APP USER views
 def course_view(request):
     print "course view called"
-    courses = Course.objects.all()	
+    try:
+        courses = Course.objects.all()	
+    except ObjectDoesNotExist:
+        return HttpResponseNotFound('No courses exist!')
+
     return render(request, 'view/course.html', { 'courses': courses })
 
 def about_view(request):
@@ -91,7 +95,7 @@ def about_view(request):
 
 
 def lesson_view(request, course_id):
-    print "lesson view called - "
+    print "lesson view called"
     try:
         course = Course.objects.get(pk=course_id)
     except ObjectDoesNotExist:
@@ -99,12 +103,29 @@ def lesson_view(request, course_id):
     try:
         lessons = Lesson.objects.filter(course_id=course_id)
     except ObjectDoesNotExist:
-        return HttpResponseNotFound('No Slides Exist Yet For This Course')
+        return HttpResponseNotFound('No lessons exist yet for this course')
 
     return render(request, 'view/lesson.html', {'course': course, 'lessons' : lessons.all()})
 
 def slideshow_view(request, course_id, lesson_id):
 	#Generate Google SlideShow view for user
-    print "slideshow view called"
-    return render(request, 'view/slideshow.html', {'course_id': course_id, 'lesson_id': lesson_id})
+    print "slideshow view called " + lesson_id
+
+    try:
+        course = Course.objects.get(pk=course_id)
+    except ObjectDoesNotExist:
+        return HttpResponseNotFound('This course does not exist')
+
+    try:
+        lesson = Lesson.objects.get(pk=lesson_id)
+    except ObjectDoesNotExist:
+        return HttpResponseNotFound('This lesson does not exist')
+
+    try:
+        slides = Slide.objects.filter(lesson_id=lesson_id)
+    except ObjectDoesNotExist:
+        return HttpResponseNotFound('No slideshow for this lesson!')
+
+    print slides
+    return render(request, 'view/slideshow.html', {'course': course, 'lesson': lesson_id, 'slides' : slides})
 

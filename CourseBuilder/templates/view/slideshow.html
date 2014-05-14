@@ -1,75 +1,68 @@
-{% extends "site_base.html" %}
-
+{% load staticfiles %}
 {% load i18n %}
 
-{% block head_title %}{% trans "Welcome" %}{% endblock %}
-
 {% block body %}
-    {% if user.is_authenticated %}
-        <div class="page-header">
-          <h1>Administration <small>Courses or Lessons or Slides</small></h1>
-        </div>
-      <!-- Example row of columns -->
-      <div class="row">
-        <div class="col-md-5">
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="{% static "css/slidy.css" %}">
+  <link rel="stylesheet" href="{% static "css/blueTheme.css" %}">
+  <script src="{% static "js/slidy.js" %}"></script> 
+  <meta name="copyright" content="Copyright &#169; 2005-2009 W3C (MIT, ERCIM, Keio)" />
 
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <h3 class="panel-title">Reorder and Select Elements</h3>
-              </div>
-              <div class="panel-body">
-                <form method="get" autocomplete="off" role="search">
-                   <div class="form-group col-md-8">
-                        <input id ="q" name="q" type="text" class="form-control" placeholder="Search">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Create New</button>
-                </form>
-                <hr>
-                <ul id="sortable">
-                  <li>slide 1</li>
-                  <li>slide 2</li>
-                  <li>slide 3</li>
-                  <li>slide 4</li>
-                  <li>slide 5</li>
-                  <li>slide 6</li>
-                  <li>slide 7</li>
-                </ul>
-              </div>
-            </div>
-        </div>
-        <div class="col-md-5">
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <h3 class="panel-title">The Form in Question</h3>
-              </div>
-              <div class="panel-body">
-                <form role="form">
-                  <div class="form-group">
-                    <label for="exampleInputEmail1">Email address</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
-                  </div>
-                  <div class="form-group">
-                    <label for="exampleInputPassword1">Password</label>
-                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-                  </div>
-                  <div class="form-group">
-                    <label for="exampleInputFile">File input</label>
-                    <input type="file" id="exampleInputFile">
-                    <p class="help-block">Example block-level help text here.</p>
-                  </div>
-                <button type="submit" class="btn btn-danger">Delete</button>
-                <button type="submit" class="btn btn-warning">Update</button>
-                <span> - OR - </span>
-                <button type="submit" class="btn btn-success">Create</button>
-                </form>
-              </div>
-            </div>
-        </div>
+</head>
+<div class="background" style="display: block;">
+  <img alt="" id="head-icon" src="{% static "graphics/icon-blue.png" %}">
+  <object id="head-logo" title="CB logo">    
+    <!-- CourseBuilder Logo goes here!!    <img alt="W3C logo" id="head-logo-fallback" src="{% static "graphics/w3c-logo-white.gif" %}">-->    
+  </object>
+</div>
 
-      </div>
-
-      <hr>
+{% if slides %}
+  {% for slide in slides %}
+    {% if forloop.first %}
+      <div class="slide cover">
+        <img class="hidden" src="{% static "graphics/bullet.png" %}" alt="">
+        <img class="hidden" src="{% static "graphics/fold.gif" %}" alt="">
+        <img class="hidden" src="{% static "graphics/unfold.gif" %}" alt="">
+        <img class="hidden" src="{% static "graphics/fold-dim.gif" %}" alt="">
+        <img class="hidden" src="{% static "graphics/nofold-dim.gif" %}" alt="">
+        <img class="hidden" src="{% static "graphics/unfold-dim.gif" %}" alt="">
+        <img class="hidden" src="{% static "graphics/bullet-fold.gif" %}" alt="">
+        <img class="hidden" src="{% static "graphics/bullet-unfold.gif" %}" alt="">
+        <img class="hidden" src="{% static "graphics/bullet-fold-dim.gif" %}" alt="">
+        <img class="hidden" src="{% static "graphics/bullet-nofold-dim.gif" %}" alt="">
+        <img class="hidden" src="{% static "graphics/bullet-unfold-dim.gif" %}" alt="">  
+        {% autoescape off %}
+          <h1> {{ slide.content }} </h1>
+        {% endautoescape %}
+      </div>    
     {% else %}
-
+      <div class="slide">
+        {% autoescape off %}
+          {{ slide.content }}
+        {% endautoescape %}
+      </div>
     {% endif %}
+  {% endfor %}
+{% else %}
+  <p>No slides exist yet for this course...</p>
+{% endif %} 
+
+<div class="toolbar" tabindex="0" style="display: block;">
+  <div style="float: right; text-align: right">
+    <span>slide 2/20</span>
+  </div>
+  <div style="text-align: left">
+    <span style="color: rgb(240, 240, 240);">* </span>
+    <a href="http://www.w3.org/Talks/Tools/Slidy2/help/help.html" title="Navigate with mouse click, space bar, Cursor Left/Right, or Pg Up and Pg Dn. Use S and B to change font size.">help?</a> 
+    <a href="javascript:w3c_slidy.toggle_table_of_contents()" title="table of contents">contents?</a> 
+    <span class="copyright">Copyright © 2005-2013 W3C <sup>®</sup> (MIT, ERCIM, Keio, Beihang)</span>
+  </div>
+</div>
+
+</body>
+</html>
 {% endblock %}
