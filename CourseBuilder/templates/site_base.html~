@@ -22,6 +22,7 @@
 {% block nav %}
 <ul class="nav navbar-nav pull-left">
     <li><a href="{% url 'slide_admin' 0 1 %}">{% trans "Slide Admin" %}</a></li>
+ 	<li><a href="/courses">{% trans "Browse Courses" %}</a></li>
 </ul>
 {% endblock %}
 
@@ -29,11 +30,11 @@
     {% include "_footer.html" %}
 {% endblock %}
 
-
+<!--
 {% block extra_body_base %}
     {% analytics %}
     {% block extra_body %}{% endblock %}
-{% endblock %}
+{% endblock %} -->
 
 
 {% block script_base %}

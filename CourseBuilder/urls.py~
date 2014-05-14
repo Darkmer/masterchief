@@ -37,6 +37,6 @@ urlpatterns += patterns('CourseBuilder.views',
 # ABOUT VIEW
 
 urlpatterns += patterns('CourseBuilder.views',
-	url(r'^about/', 'about_view', name="about_view")
+	url(r"^about/", 'about view', name="about_view")
 )
 

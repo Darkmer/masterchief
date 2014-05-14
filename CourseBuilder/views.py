@@ -85,6 +85,11 @@ def course_view(request):
     courses = Course.objects.all()	
     return render(request, 'view/course.html', { 'courses': courses })
 
+def about_view(request):
+	print "about view called"
+	return render(request, 'view/about.html')
+
+
 def lesson_view(request, course_id):
     print "lesson view called - "
     try:

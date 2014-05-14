@@ -1,0 +1,39 @@
+{% extends "site_base.html" %}
+<head> <link href="carousel.css" rel="stylesheet"> </head>
+{% load i18n %}
+
+{% block head_title %}{% trans "Welcome" %}{% endblock %}
+
+{% block body %}
+    {% if user.is_authenticated %}
+
+	    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron">
+      <div class="container">
+        <h1>CourseBuilder</h1>
+        <p><code>A Modern Course Builder for Modern People</code></p>
+      </div>
+    </div>
+
+    <div class="container">
+      <!-- Example row of columns -->
+      <div class="row">
+        <div class="col-md-4">
+          <h2>Daniel Felizardo</h2>
+          <p>Really a swell guy</p>
+        </div>
+        <div class="col-md-4">
+          <h2>Aaron Tobias</h2>
+          <p>Quite a swanky fellow</p>
+       </div>
+        <div class="col-md-4">
+          <h2>Altan Gulen</h2>
+          <p>Such a groovy gentlemen</p>
+        </div>
+      </div>
+    </div> 
+
+
+    {% else %}
+    {% endif %}
+{% endblock %}
