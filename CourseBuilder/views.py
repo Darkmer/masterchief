@@ -24,10 +24,10 @@ def course_admin(request):
     max_num = Course.objects.count()
     course_set = formset_factory(CourseForm, extra=max_num, max_num=max_num)
 
-    keys = [c.pk for c in Course.objects.all()]
-    forms = course_set(initial=Course.objects.all().values())
+    keys = [c.pk for c in Course.objects.order_by('position').all()]
+    forms = course_set(initial=Course.objects.order_by('position').all().values())
     forms = zip(forms, keys)
-    return render(request, 'admin/course.html', {'forms': forms, 'emptyForm': CourseForm(), 'courses' : Course.objects.all() })
+    return render(request, 'admin/course.html', {'forms': forms, 'emptyForm': CourseForm(), 'courses' : Course.objects.order_by('position').all() })
 
 def lesson_admin(request, course_id):
     print "Lesson admin called"
@@ -68,18 +68,30 @@ def slide_admin(request, course_id, lesson_id):
 @require_POST
 def course_admin_update(request, course_id, prefix):
     if request.is_ajax():
-        form = CourseForm(request.POST, prefix=prefix) if prefix is 'None' else CourseForm(request.POST)
+        form = CourseForm(request.POST) if prefix == 'None' else CourseForm(request.POST, prefix=prefix) 
         if form.is_valid():
             try:
                 course = Course.objects.get(pk=course_id)
                 course.teacher = form.cleaned_data['teacher']
-                course.name = form.cleaned_data['name']
+                course.name = form.cleaned_data['name'] 
                 course.save()
                 return HttpResponse('OK')
                 
             except ObjectDoesNotExist:
                 # create new object
-                form.save()
+                position = None
+                if Course.objects.count() > 0:
+                    course = Course.objects.order_by('-position').all()[0]
+                    position = course.position
+
+                else:
+                    position = 1
+
+                newcourse = Course()
+                newcourse.teacher = form.cleaned_data['teacher']
+                newcourse.name = form.cleaned_data['name']
+                newcourse.position = position
+                newcourse.save()
                 return HttpResponse('CREATED')
         else:
             errors_dict = {}
@@ -96,24 +108,34 @@ def course_admin_update(request, course_id, prefix):
 #ADMIN AJAX CALLS
 @staff_member_required
 @require_POST
-def course_admin_delete(request, course_id, prefix):
+def course_admin_delete(request, course_id):
     if request.is_ajax():
-        console.log(request.Post);
-        form = CourseForm(request.POST, prefix=prefix)
-        if form.is_valid():
-            return HttpResponse('OK')
-        else:
-            errors_dict = {}
-            if form.errors:
-                for error in form.errors:
-                    e = form.errors[error]
-                    field = prefix+error;
-                    print field
-                    errors_dict[field] = unicode(e)
-                print errors_dict
-            return HttpResponseBadRequest(json.dumps(errors_dict))
+        course = Course.objects.get(pk=course_id);
+        course.delete();
+        return HttpResponse('OK')
     else:
         return HttpResponseNotFound('You do not have permission to access this page!')
+
+
+@staff_member_required
+@require_POST
+def course_admin_reorder(request):
+    if request.is_ajax():
+        courselist = request.POST.getlist('courselist[]');
+        print courselist
+        for order, course_id in enumerate(courselist):     
+            course = Course.objects.get(pk=course_id);
+            course.position = order + 1;
+            course.save()
+        return HttpResponse('OK')
+    else:
+        return HttpResponseNotFound('You do not have permission to access this page!')
+
+
+
+
+
+
 
 
 
@@ -130,6 +152,21 @@ def slide_admin_actions(request, slide_id):
     if request.is_ajax():
     	action = request.POST['action'] #action can be 'update', 'remove', 'new'
     pass
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

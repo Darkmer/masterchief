@@ -11,6 +11,7 @@ class Teacher(models.Model):
 class Course(models.Model):
   teacher = models.ForeignKey(Teacher)
   name = models.TextField(max_length=50)
+  position = models.IntegerField()
   # startDate = models.DateTimeField()
   # endDate = models.DateTimeField()
 
@@ -31,7 +32,7 @@ class Lesson(models.Model):
 
 class Slide(models.Model):
   lesson_id = models.ForeignKey(Lesson)
-  title = models.TextField(max_length=255)  
+  name = models.TextField(max_length=255)  
   content = models.TextField(null=True)
   position = models.IntegerField()
   googleStyles = models.CharField(max_length=75, null=True)

@@ -33,13 +33,13 @@ $(document).ready(function() {
 
 
       function block_form() {
-          $("#loading").show();
+          $(".loading").show();
           $('textarea').attr('disabled', 'disabled');
           $('input').attr('disabled', 'disabled');
       }
 
       function unblock_form() {
-          $('#loading').hide();
+          $('.loading').hide();
           $('textarea').removeAttr('disabled');
           $('input').removeAttr('disabled');
           $('.errorlist').remove();
@@ -49,29 +49,28 @@ $(document).ready(function() {
       var options = {
           beforeSubmit: function(form, options) {
               // return false to cancel submit
-              console.log(options);
+              console.log(form);
               block_form();
           },
           success: function() {
               unblock_form();
 
-              $("#form_ajax").show();
+              $(".form_ajax").show();
               setTimeout(function() {
-                  $("#form_ajax").hide();
+                  $(".form_ajax").hide();
               }, 5000);
           },
           error:  function(resp) {
               unblock_form();
-              $("#form_ajax_error").show();
+              $(".form_ajax_error").show();
               // render errors in form fields
               var errors = JSON.parse(resp.responseText);
               for (error in errors) {
-                  var id = '#id_' + error;
-                  console.log($(id).parents('.form-group'));
-                  $(id).parent().siblings('.help-block').html(errors[error]);
+                  var tabId = '#id_' + error;
+                  $(""+tabId).next().html(errors[error]);
               }
               setTimeout(function() {
-                  $("#form_ajax_error").hide();
+                  $(".form_ajax_error").hide();
               }, 5000);
           },
       };
@@ -119,8 +118,8 @@ $(document).ready(function() {
 
   }
 
-
   function removeCurrentTab() {
+
       var tabContentId = $currentTab.attr("href");
       $currentTab.parent().remove(); //remove li of tab
       $('#admin-content-tabs a:last').tab('show'); // Select first tab
@@ -130,14 +129,28 @@ $(document).ready(function() {
   //this method will register event on close icon on the tab..
   var registerCloseEvent = function () {
 
-      $(".closeTab").click(function () {
+    $(".closeTab").click(function (e) {
+        e.preventDefault();
 
+        var r=confirm("Are you sure you want to delete this tab?");
+        if (r==false){
+            return;
+        }
           //there are multiple elements which has .closeTab icon so close the tab whose close icon is clicked
           var tabContentId = $(this).parent().attr("href");
           $(this).parent().parent().remove(); //remove li of tab
           $('#admin-content-tabs a:last').tab('show'); // Select first tab
           $(tabContentId).remove(); //remove respective tab content
+          
+          var postUrl = $(this).data("url");
 
+          if(postUrl){
+            var jqxhr = $.post(postUrl, function(e) {
+            })
+            .fail(function(e) {
+              alert( "Error in Performing Deletion" );
+            });
+          }
       });
   }
   //this method will demonstrate how to add tab dynamically
@@ -149,11 +162,9 @@ $(document).ready(function() {
           var tabId = "tab-" + slideCount; //this is id on tab content div where the 
           slideCount = slideCount + 1; //increment slide count
 
-          $('.nav-tabs').append('<li><a href="#' + tabId + '"><button class="close closeTab" type="button" >×</button>'+$(this).html()+'</a></li>');
+          $('.nav-tabs').append('<li><a href="#' + tabId + '"><button class="close closeTab" type="button" >×</button><span>'+$(this).html()+'</span></a></li>');
           $('.tab-content').append('<div class="tab-pane" id="' + tabId + '"></div>');
 
-          craeteNewTabAndLoadUrl("", "./", "#" + tabId);
-          console.log($('#emptyform').html());
           $("#" +  tabId).html($('#emptyform').html());
 
           $(this).tab('show');
@@ -161,16 +172,34 @@ $(document).ready(function() {
           registerCloseEvent();
 
           $("#" +  tabId + " form").ajaxForm(options);
+        
       });
       registerCloseEvent(); //for preloaded slides.
 
   }();
 
-
     $("div.panel-body").on("keyup", ".tab-subject", function (e) {
       e.preventDefault();
       var tabId = $(this).parents(".tab-pane").attr('id');
-       $('#admin-content-tabs a[href="#' + tabId + '"]').html(this.value);
+       $('#admin-content-tabs a[href="#' + tabId + '"] span').html(this.value);
      });
 
+
+    $('#updateOrder').click(function (e) {
+      
+      var courselist = []
+      $('#admin-content-tabs a').each(function( index) {
+        courselist.push($(this).data('course'));
+      });
+        var postUrl = $(this).data("url");
+
+        if(postUrl){
+          var jqxhr = $.post(postUrl, {courselist: courselist} , function(e) {
+            alert( "Order Updated Successfully" );
+          })
+          .fail(function(e) {
+            alert( "Error In Performing Reorder" );
+          });
+        }
+    });
 });

@@ -18,16 +18,16 @@
               <div class="panel-heading">
                <!--  <h3 class="panel-title">The Form in Question</h3> -->
                 <button id="newtab" class="btn btn-primary">New Course</button>
-                <button class="btn btn-secondary">Update Order</button>
+                <button id="updateOrder" class="btn btn-secondary" data-url="{% url 'course_admin_reorder' %}">Update Order</button>
               </div>
               <div class="panel-body">
                 <div class="container-fluid">
-                    <ul class="nav nav-tabs marginBottom" id="admin-content-tabs">
+                    <ul id="admin-content-tabs" class="nav nav-tabs marginBottom">
 
                   {% if courses %}
                     {% for course in courses %}
                   
-                  <li class={% if forloop.counter == 1 %}"active"{% else %}""{% endif %}><a href="#tab-{{ forloop.counter }}"><button class="close closeTab" type="button">×</button>{{ course.name }}</a></li>
+                  <li class={% if forloop.counter == 1 %}"active"{% else %}""{% endif %}><a href="#tab-{{ forloop.counter }}" data-course="{{ course.pk }}"><button class="close closeTab" data-url="{% url 'course_admin_delete' course.pk %}" type="button">×</button><span>{{ course.name }}</span></a></li>
                     {% endfor %}
                   {% endif %}
                     </ul>
@@ -37,36 +37,15 @@
                         {% for tabForm, key in forms %}
 
                         <div class={% if forloop.first %}"tab-pane active"{% else %}"tab-pane"{% endif %} id="tab-{{ forloop.counter }}">
-<form id="{{tabForm.prefix}}" class="form-horizontal hidden" role="form" method="post" action="{% url 'course_admin_update' key tabForm.prefix %}">
-                             {% csrf_token %}
-                                 {{ tabForm.non_field_errors }}
-                                    {{ tabForm.as_p }}
-                              <div class="form-group">
-                                <div class="col-sm-offset-2 col-sm-6">
-
-                                <div id="loading" style="display:none;">
-                                    <span id="load_text">loading...</span>
-                                </div>
-                                <div id="form_ajax" style="display:none;">
-                                    <span>Form submit successfully.</span>
-                                </div>
-                                <div id="form_ajax_error" style="display:none;">
-                                    <span>Can not submit data due to errors.</span>
-                                </div>
-                                <button type="submit" class="btn btn-warning">{% trans "Update Course" %}</button>
-                                </div>
-                              </div>
-                            </form>
 
                             <form id="{{tabForm.prefix}}" class="form-horizontal" role="form" method="post" action="{% url 'course_admin_update' key tabForm.prefix %}">
                               {{ tabForm.non_field_errors }}
                               {% csrf_token %}
 
                               <div class="form-group">
-                              <span class="help-block text-danger">{{ tabForm.teacher.errors }}</span>
                                 <label class="col-sm-2 control-label" for="{{tabForm.teacher.auto_id}}">{{ tabForm.teacher.name|capfirst }}:<span class="field-required">*</span>:</label> 
                                 <div class="col-sm-6">
-                                                                   {{tabForm.teacher.value}}
+                        
                                   <select id="{{tabForm.teacher.auto_id}}" class="form-control" name="{{ tabForm.teacher.html_name }}">
                                    {% for id, name in tabForm.teacher.field.choices %}
                                     {% if name ==  tabForm.teacher.data %}
@@ -76,14 +55,15 @@
                                       {% endif %}
                                     {% endfor %}
                                     </select>
+                                    <span class="text-center text-danger"></span>
                                 </div>
                               </div>
 
                               <div class="form-group">
-                                <span class="help-block text-danger">{{ tabForm.name.errors }}</span>
                                 <label class="col-sm-2 control-label" for="{{tabForm.name.auto_id}}">{{ tabForm.name.name|capfirst }}:<span class="field-required">*</span>:</label> 
                                 <div class="col-sm-6">
                                   <input  id="{{ tabForm.name.auto_id }}" class="form-control tab-subject" name="{{ tabForm.name.html_name }}" maxlength="50" placeholder="Johnathan" type="text" value="{{ tabForm.name.value|default_if_none:"" }}">
+                                  <span class="text-center text-danger"></span>
                                 </div>
                               </div>
 
@@ -94,13 +74,13 @@
                               <div class="form-group">
                                 <div class="col-sm-offset-2 col-sm-6">
 
-                                <div id="loading" style="display:none;">
+                                <div class="loading" style="display:none;">
                                     <span id="load_text">loading...</span>
                                 </div>
-                                <div id="form_ajax" style="display:none;">
+                                <div class="form_ajax" style="display:none;">
                                     <span>Form submit successfully.</span>
                                 </div>
-                                <div id="form_ajax_error" style="display:none;">
+                                <div class="form_ajax_error" style="display:none;">
                                     <span>Can not submit data due to errors.</span>
                                 </div>
                                 <button type="submit" class="btn btn-warning">{% trans "Update Course" %}</button>
@@ -126,8 +106,7 @@
           {% csrf_token %}
 
           <div class="form-group">
-          <span class="help-block text-danger">{{ emptyForm.teacher.errors }}</span>
-            <label class="col-sm-2 control-label" for="id_teacher">Teacher:<span class="field-required">*</span>:</label> 
+            <label class="col-sm-2 control-label" for="teacher">Teacher:<span class="field-required">*</span>:</label> 
             <div class="col-sm-6">
 
               <select id="id_teacher" class="form-control" name="teacher">
@@ -139,10 +118,9 @@
           </div>
 
           <div class="form-group">
-          <span class="help-block text-danger">{{ emptyForm.name.errors }}</span>
             <label class="col-sm-2 control-label" for="id_name">Name:<span class="field-required">*</span>:</label> 
             <div class="col-sm-6">
-              <input id="id_name" class="form-control tab-subject" name="name" maxlength="50" placeholder="Johnathan" type="text" value="{{ emptyForm.name.value|default_if_none:"" }}">
+              <input id="id_name" class="form-control tab-subject" name="name" maxlength="50" placeholder="History" type="text" value="{{ emptyForm.name.value|default_if_none:"" }}">
             </div>
           </div>
 
@@ -171,4 +149,10 @@
     {% else %}
 
     {% endif %}
+{% endblock %}
+
+{% block extra_script %}
+<script type="text/javascript">
+
+</script>
 {% endblock %}
