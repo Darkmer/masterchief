@@ -1,8 +1,7 @@
-![CourseBuilder Logo](/CourseBuilder/static/images/logo.png)
+![CourseBuilder Logo](/CourseBuilder/static/images/logo.png) 
 # CourseBuilder
-=====================
 
-## A modern coursebuilder for a modern teacher
+**A modern course builder for a modern teacher**
 
 CourseBuilder is a webapplication which allows teachers to dynamically and fluidly create Courses, Lessons, and Slides. Imagine a college professor putting their course on CourseBuilder. Each lecture would be a Lesson and each of those Lessons would contain the slides the professor went through in lecture.
 
@@ -37,21 +36,21 @@ The team decided to use Github's tools for issue tracking and documentation. The
 
 ### LINUX INSTALL INSTRUCTIONS
 
-- [ ] Python comes installed on most current linux distributions. If it is not installed on your distribution (try “python” in the temrinal and see if the command is recognized) then go to https://www.python.org/download/ and find the correct release for your distribution
+* Python comes installed on most current linux distributions. If it is not installed on your distribution (try “python” in the temrinal and see if the command is recognized) then go to https://www.python.org/download/ and find the correct release for your distribution
 
-2. Install PIP, an extremely easy to use and popular python manager:
+* Install PIP, an extremely easy to use and popular python manager:
 
 ```
 sudo apt-get install python-pip
 ```
 
-3. Install Django, the web server python library we will be using:
+* Install Django, the web server python library we will be using:
 
 ```
 sudo pip install django
 ```
 
-4. Navigate to the home directory, clone our repository and then navigate into the repository:
+* Navigate to the home directory, clone our repository and then navigate into the repository:
 
 ```
 cd ~
@@ -59,18 +58,18 @@ git clone https://github.com/Darkmer/masterchief.git
 cd masterchief/
 ```
 
-5. We are almost there. This folder contains everything we will need to run the server. First we need to fix any inconsistencies with the local database and the database we expect to have up and running. Let’s sync the database:
+* We are almost there. This folder contains everything we will need to run the server. First we need to fix any inconsistencies with the local database and the database we expect to have up and running. Let’s sync the database:
 
 ```
 python manage.py syncdb
 ```
 
-6. With the database synced we can now start the Django Server:
+* With the database synced we can now start the Django Server:
 
 ```
 python manage.py runserver
 ```
 
-7. The server will tell you that it is up and running. Leave it running in the terminal and go to your favorite browser. Point the browser at localhost:8000/ and you will see the web application up and running. Feel free to start playing around with this wonderful application.
+* The server will tell you that it is up and running. Leave it running in the terminal and go to your favorite browser. Point the browser at localhost:8000/ and you will see the web application up and running. Feel free to start playing around with this wonderful application.
 
 
