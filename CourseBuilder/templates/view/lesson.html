@@ -29,7 +29,7 @@
                   {% if lessons %}
                       {% for lesson in lessons %}
                         <p>
-                          <li><a href="{{lesson.id}}">Lesson #{{lesson.position}} - {{ lesson.name }}</a></li>
+                          <li><a target="_blank" href="{{lesson.id}}">Lesson #{{lesson.position}} - {{ lesson.name }}</a></li>
                           <ul>                            
                             <li>{{lesson.description}}</li>
                           </ul>

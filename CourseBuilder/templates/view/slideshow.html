@@ -14,10 +14,10 @@
 
 </head>
 <div class="background" style="display: block;">
-  <img alt="" id="head-icon" src="{% static "graphics/icon-blue.png" %}">
-  <object id="head-logo" title="CB logo">    
-    <!-- CourseBuilder Logo goes here!!    <img alt="W3C logo" id="head-logo-fallback" src="{% static "graphics/w3c-logo-white.gif" %}">-->    
-  </object>
+  <img alt="" id="head-icon" src="{% static "graphics/icon-blue.png" %}">  
+    <object id="head-logo" title="CB logo">     
+        <img alt="CB logo" id="head-logo-fallback" src="{% static "images/logo.png" %}">
+    </object>
 </div>
 
 {% if slides %}
@@ -51,15 +51,14 @@
   <p>No slides exist yet for this course...</p>
 {% endif %} 
 
-<div class="toolbar" tabindex="0" style="display: block;">
+<div class="toolbar" tabindex="0" style="display: block;">  
   <div style="float: right; text-align: right">
-    <a href="{% static "http://localhost:8000/courses/{{course.id}}/lessons" %}"><span>Back to Lesson View</span></a>
     <span>slide 2/20</span>
   </div>
   <div style="text-align: left">
     <span style="color: rgb(240, 240, 240);">* </span>
     <a href="http://www.w3.org/Talks/Tools/Slidy2/help/help.html" title="Navigate with mouse click, space bar, Cursor Left/Right, or Pg Up and Pg Dn. Use S and B to change font size.">help?</a> 
-    <a href="javascript:w3c_slidy.toggle_table_of_contents()" title="table of contents">contents?</a> 
+    <a href="javascript:w3c_slidy.toggle_table_of_contents()" title="table of contents">contents?</a>     
     <span class="copyright">Copyright © 2005-2013 W3C <sup>®</sup> (MIT, ERCIM, Keio, Beihang)</span>
   </div>
 </div>
