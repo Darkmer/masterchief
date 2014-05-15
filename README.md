@@ -13,9 +13,9 @@ Having all of this information online and easily accessible allows the students 
 Django is an extremly popular web framework written in python. It is based on the MVC design pattern and separates the views, models, and controllers in an intuitive and easy to use way. Django has a lot of documentation and makes for extremly powerful webapplications. We are using Django v 1.6.2 
 [Check it out!](https://www.djangoproject.com/)
     
-### MySQL
-MySQL is one of many databases that Django supports. We went with MySQL because of its support and its power. One of the strongest modern database systems, MySQL fulfills all of our requirements and everyone here is familiar with its use. 
-[Check it out!](http://www.mysql.com/)
+### SQLite
+SQLite is one of many databases that Django supports. We went with SQLite because of its support and its power. One of the strongest modern database systems, SQLite fulfills all of our requirements and everyone here is familiar with its use. 
+[Check it out!](http://www.sqlite.org/)
     
 ### JavaScript    
 JavaScript allows for a lot of the usability of the website. The dynamic in page slide show, the ability to update courses, lessons, and slides, and a lot of the other cool features are powered by the JavaScript. 
