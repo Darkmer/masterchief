@@ -1,3 +1,0 @@
-{% load i18n %}
-
-{% trans "CREATED BY THE ONE AND ONLY MIDNIGHT PILEDRIVERS" %}
