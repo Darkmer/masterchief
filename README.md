@@ -61,7 +61,7 @@ cd masterchief/
 * Now that we are in the project, there are some required software and environments we need to install. Luckily we’ve thought ahead and included them all in an easy to use requirements.txt file. PIP is smart enough to parse this file and install all of the required software for you.:
 
 ```
-sudo pip install requirements.txt
+sudo pip install -r requirements.txt
 ```
 
 * We are almost there. This folder contains everything we will need to run the server. First we need to fix any inconsistencies with the local database and the database we expect to have up and running. Let’s sync the database:
