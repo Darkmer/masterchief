@@ -17,10 +17,6 @@
       filter(this,'#contentList');
   });
 
-  var $currentlySelected = null;
-  var selected = [];
-
-$('#admin-content-tabs').sortable();
 });
 
 
@@ -28,20 +24,25 @@ $('#admin-content-tabs').sortable();
 //initilize tabs
 $(document).ready(function() {
 
+ $('#admin-content-tabs').sortable();
+
   var currentTab;
   var slideCount =  $('.nav-tabs').children().length + 1;
+  var cloneCntr = 1;
 
 
       function block_form() {
           $(".loading").show();
           $('textarea').attr('disabled', 'disabled');
           $('input').attr('disabled', 'disabled');
+          $('select').attr('disabled', 'disabled');
       }
 
       function unblock_form() {
           $('.loading').hide();
           $('textarea').removeAttr('disabled');
           $('input').removeAttr('disabled');
+          $('input').removeAttr('disabled', 'disabled');
           $('.errorlist').remove();
       }
 
@@ -49,16 +50,25 @@ $(document).ready(function() {
       var options = {
           beforeSubmit: function(form, options) {
               // return false to cancel submit
-              console.log(form);
               block_form();
           },
           success: function(data) {
-              unblock_form();
+              if (data.hasOwnProperty('created_object_id')){
+                var tabId = "tab-" + (slideCount - 1);
+                $('a[href="#' + tabId + '"]').attr('data-subject', data.created_object_id);
+                $("#" + tabId + " .btn-primary").hide();
+                $("#" + tabId + " .newContentButton").removeClass('hidden');
+                var nextContent = $("#" + tabId + " a.newContentButton");
+                if(nextContent){
+                  nextContent.attr('href', nextContent.attr('href').replace("/0/", "/"+ data.created_object_id + "/"));                  
+                }
+              }
 
               $(".form_ajax").show();
+              unblock_form();
               setTimeout(function() {
                   $(".form_ajax").hide();
-              }, 5000);
+              }, 3000);
           },
           error:  function(resp) {
               unblock_form();
@@ -66,12 +76,14 @@ $(document).ready(function() {
               // render errors in form fields
               var errors = JSON.parse(resp.responseText);
               for (error in errors) {
-                  var tabId = '#id_' + error;
+                  var tabId = '#id_' + error.replace('None-','');
                   $(""+tabId).next().html(errors[error]);
+                  //hack, you don't know which one to modify
+                  $(""+tabId+(cloneCntr-1)).next().html(errors[error]);
               }
               setTimeout(function() {
                   $(".form_ajax_error").hide();
-              }, 5000);
+              }, 3000);
           },
       };
 
@@ -93,20 +105,6 @@ $(document).ready(function() {
   //return current active tab
   function getCurrentTab() {
       return currentTab;
-  }
-
-  //This function will create a new tab here and it will load the url content in tab content div.
-  function craeteNewTabAndLoadUrl(parms, url, loadDivSelector) {
-
-  /*    $("" + loadDivSelector).load(url, function (response, status, xhr) {
-          if (status == "error") {
-              var msg = "Sorry but there was an error getting details ! ";
-              console.log()
-              $("" + loadDivSelector).html(msg + xhr.status + " " + xhr.statusText);
-              $("" + loadDivSelector).html("Load Ajax Content Here...");
-          }
-      });*/
-
   }
 
   //this will return element from current tab
@@ -153,6 +151,13 @@ $(document).ready(function() {
           }
       });
   }
+
+  function fixIds(elem, cntr) {
+    $(elem).find("[id]").add(elem).each(function() {
+        this.id = this.id.replace(/\d+$/, "") + cntr;
+    })
+  }
+
   //this method will demonstrate how to add tab dynamically
   var registerslideButtonEvent = function () {
       /* just for this demo */
@@ -165,7 +170,10 @@ $(document).ready(function() {
           $('.nav-tabs').append('<li><a href="#' + tabId + '" data-subject="999"><button class="close closeTab" type="button" >×</button><span>'+$(this).html()+'</span></a></li>');
           $('.tab-content').append('<div class="tab-pane" id="' + tabId + '"></div>');
 
-          $("#" +  tabId).html($('#emptyform').html());
+          var newForm = $('#emptyform form').clone(true,true);
+          fixIds(newForm, cloneCntr++);
+
+          $("#" +  tabId).html(newForm);
 
           $(this).tab('show');
           showTab(tabId);

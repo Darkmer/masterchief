@@ -54,7 +54,7 @@
                                       {% endif %}
                                     {% endfor %}
                                     </select>
-                                    <span class="text-center text-danger"></span>
+                                    <span class="text-center text-danger form-error"></span>
                                 </div>
                               </div>
 
@@ -62,7 +62,7 @@
                                 <label class="col-sm-2 control-label" for="{{tabForm.name.auto_id}}">{{ tabForm.name.name|capfirst }}:<span class="field-required">*</span>:</label> 
                                 <div class="col-sm-6">
                                   <input  id="{{ tabForm.name.auto_id }}" class="form-control tab-subject" name="{{ tabForm.name.html_name }}" maxlength="50" placeholder="Johnathan" type="text" value="{{ tabForm.name.value|default_if_none:"" }}">
-                                  <span class="text-center text-danger"></span>
+                                  <span class="text-center text-danger form-error"></span>
                                 </div>
                               </div>
 
@@ -72,19 +72,19 @@
 
                               <div class="form-group">
                                 <div class="col-sm-offset-2 col-sm-6">
-
-                                <div class="loading" style="display:none;">
-                                    <span class="load_text">loading...</span>
-                                </div>
-                                <div class="form_ajax" style="display:none;">
-                                    <span>Form submit successfully.</span>
-                                </div>
-                                <div class="form_ajax_error" style="display:none;">
-                                    <span>Can not submit data due to errors.</span>
-                                </div>
                                 <button type="submit" class="btn btn-danger">{% trans "Update Course" %}</button>
 
                                 <a href="{% url 'lesson_admin' key %}" class="btn btn-success">{% trans "View Lessons" %}</a>
+                                
+                                  <span class="form_ajax" style="display:none;">
+                                      <i class="fa fa-check-circle"></i> Success!
+                                  </span>
+                                  <span class="form_ajax_error" style="display:none;">
+                                      <i class="fa fa-exclamation-circle"></i> An Error Occured!
+                                  </span>
+                                  <span class="loading" style="display:none;">
+                                      <i class="fa fa-refresh fa-spin"></i> Loading...
+                                  </span>
                                 </div>
                               </div>
                               </form>
@@ -102,6 +102,7 @@
 
     </div>
       <hr>
+
       <div class="hidden" id="emptyform">          
         <form id="new" class="form-horizontal" role="form" method="post" action="{% url 'course_admin_update' 0 emptyForm.prefix %}">
           {% csrf_token %}
@@ -115,6 +116,7 @@
                     <option value="{{ id }}">{{ name }}</option>
                   {% endfor %}
                 </select>
+               <span class="text-center text-danger form-error"></span>
             </div>
           </div>
 
@@ -122,6 +124,7 @@
             <label class="col-sm-2 control-label" for="id_name">Name:<span class="field-required">*</span>:</label> 
             <div class="col-sm-6">
               <input id="id_name" class="form-control tab-subject" name="name" maxlength="50" placeholder="History" type="text" value="{{ emptyForm.name.value|default_if_none:"" }}">
+               <span class="text-center text-danger form-error"></span>
             </div>
           </div>
 
@@ -131,16 +134,18 @@
 
           <div class="form-group">
             <div class="col-sm-offset-2 col-sm-6">
-              <div class="loading" style="display:none;">
-                  <span class="load_text">loading...</span>
-              </div>
-              <div class="form_ajax" style="display:none;">
-                  <span>Form submit successfully.</span>
-              </div>
-              <div class="form_ajax_error" style="display:none;">
-                  <span>Can not submit data due to errors.</span>
-              </div>
               <button type="submit" class="btn btn-primary">{% trans "New Course" %}</button>
+            <button type="submit" class="hidden newContentButton btn btn-danger">Update Course</button>
+            <a href="{% url 'lesson_admin' 0 %}" class="hidden newContentButton btn btn-success">{% trans "View Lessons" %}</a>
+              <span class="form_ajax" style="display:none;">
+                  <i class="fa fa-check-circle"></i> Success!
+              </span>
+              <span class="form_ajax_error" style="display:none;">
+                  <i class="fa fa-exclamation-circle"></i> Check Errors!
+              </span>
+              <span class="loading" style="display:none;">
+                  <i class="fa fa-refresh fa-spin"></i> Loading...
+              </span>
             </div>
           </div>
 

@@ -77,20 +77,20 @@
 
                               <div class="form-group">
                                 <div class="col-sm-offset-2 col-sm-6">
-
-                                <div class="loading" style="display:none;">
-                                    <span id="load_text">loading...</span>
-                                </div>
-                                <div class="form_ajax" style="display:none;">
-                                    <span>Form submit successfully.</span>
-                                </div>
-                                <div class="form_ajax_error" style="display:none;">
-                                    <span>Can not submit data due to errors.</span>
-                                </div>
-    
                                 <button type="submit" class="btn btn-danger">{% trans "Update Lesson" %}</button>
                                 <a href="{% url 'slide_admin' page_course_id key %}" class="btn btn-success">{% trans "View Slides" %}</a>
                                 </div>
+
+                                  <span class="form_ajax" style="display:none;">
+                                      <i class="fa fa-check-circle"></i> Success!
+                                  </span>
+                                  <span class="form_ajax_error" style="display:none;">
+                                      <i class="fa fa-exclamation-circle"></i> An Error Occured!
+                                  </span>
+                                  <span class="loading" style="display:none;">
+                                      <i class="fa fa-refresh fa-spin"></i> Loading...
+                                  </span>
+
                               </div>
                               </form>
                             </div>
@@ -143,16 +143,22 @@
 
           <div class="form-group">
             <div class="col-sm-offset-2 col-sm-6">
-              <div class="loading" style="display:none;">
-                  <span class="load_text">loading...</span>
-              </div>
-              <div class="form_ajax" style="display:none;">
-                  <span>Form submit successfully.</span>
-              </div>
-              <div class="form_ajax_error" style="display:none;">
-                  <span>Can not submit data due to errors.</span>
-              </div>
+
               <button type="submit" class="btn btn-primary">{% trans "New Lesson" %}</button>
+              
+            <button type="submit" class="hidden newContentButton btn btn-danger">Update Lesson</button>
+
+            <a href="{% url 'slide_admin' page_course_id 0 %}" class="hidden newContentButton btn btn-success">{% trans "View Slides" %}</a>
+
+                <span class="form_ajax" style="display:none;">
+                    <i class="fa fa-check-circle"></i> Success!
+                </span>
+                <span class="form_ajax_error" style="display:none;">
+                    <i class="fa fa-exclamation-circle"></i> An Error Occured!
+                </span>
+                <span class="loading" style="display:none;">
+                    <i class="fa fa-refresh fa-spin"></i> Loading...
+                </span>
             </div>
           </div>
 

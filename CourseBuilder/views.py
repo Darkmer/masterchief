@@ -62,7 +62,8 @@ def course_admin_update(request, course_id, prefix):
                 newcourse.name = form.cleaned_data['name']
                 newcourse.position = position
                 newcourse.save()
-                return HttpResponse('OK')
+                response = {'created_object_id': newcourse.pk}
+                return HttpResponse(json.dumps(response), mimetype="application/json") 
         else:
             errors_dict = {}
             if form.errors:
@@ -157,7 +158,8 @@ def lesson_admin_update(request, lesson_id, prefix):
                 newlesson.description = form.cleaned_data['description']
                 newlesson.position = position
                 newlesson.save()
-                return HttpResponse('OK')
+                response = {'created_object_id': newlesson.pk}
+                return HttpResponse(json.dumps(response), mimetype="application/json") 
         else:
             errors_dict = {}
             if form.errors:
@@ -262,7 +264,8 @@ def slide_admin_update(request, slide_id, prefix):
                 newslide.googleStyles = form.cleaned_data['googleStyles']
                 newslide.position = position
                 newslide.save()
-                return HttpResponse('OK')
+                response = {'created_object_id': newslide.pk}
+                return HttpResponse(json.dumps(response), mimetype="application/json") 
         else:
             errors_dict = {}
             if form.errors:

@@ -1,6 +1,7 @@
 {% extends "site_base.html" %}
 
 {% load i18n %}
+{% load staticfiles %}
 {% load admin_tags %}
 
 {% block head_title %}{% trans "Welcome" %}{% endblock %}
@@ -19,6 +20,7 @@
                <!--  <h3 class="panel-title">The Form in Question</h3> -->
                 <button id="newtab" class="btn btn-primary">New Slide</button>
                 <button id="updateOrder" class="btn btn-secondary" data-url="{% url 'slide_admin_reorder' %}">Update Order</button>
+                <a href="{% url 'slideshow_view' page_course_id page_lesson_id %}" class="btn btn-success btn-md newContentButton pull-right" target="_blank">{% trans "View SlideShow!" %}</a>
               </div>
               <div class="panel-body">
                 <div class="container-fluid">
@@ -69,26 +71,26 @@
                               <div class="form-group">
                                 <label class="col-sm-2 control-label" for="{{tabForm.content.auto_id}}">{{ tabForm.content.name|capfirst }}:</label> 
                                 <div class="col-sm-6">
-                                  <textarea id="{{ tabForm.content.auto_id }}" class="form-control" name="{{ tabForm.content.html_name }}" cols="40" rows="10" placeholder="Johnathan">{{ tabForm.content.value|default_if_none:"" }}</textarea>
+                                  <textarea id="{{ tabForm.content.auto_id }}" class="form-control code-html" name="{{ tabForm.content.html_name }}" cols="40" rows="10" placeholder="Johnathan">{{ tabForm.content.value|default_if_none:"" }}</textarea>
                                   <span class="text-center text-danger"></span>
                                 </div>
                               </div>
 
                               <div class="form-group">
                                 <div class="col-sm-offset-2 col-sm-6">
-
-                                <div class="loading" style="display:none;">
-                                    <span id="load_text">loading...</span>
-                                </div>
-                                <div class="form_ajax" style="display:none;">
-                                    <span>Form submit successfully.</span>
-                                </div>
-                                <div class="form_ajax_error" style="display:none;">
-                                    <span>Can not submit data due to errors.</span>
-                                </div>
     
                                 <button type="submit" class="btn btn-danger">{% trans "Update Slide" %}</button>
-                                <a href="#" class="btn btn-success">{% trans "View SlideShow" %}</a>
+
+
+                                  <span class="form_ajax" style="display:none;">
+                                      <i class="fa fa-check-circle"></i> Success!
+                                  </span>
+                                  <span class="form_ajax_error" style="display:none;">
+                                      <i class="fa fa-exclamation-circle"></i> An Error Occured!
+                                  </span>
+                                  <span class="loading" style="display:none;">
+                                      <i class="fa fa-refresh fa-spin"></i> Loading...
+                                  </span>
                                 </div>
                               </div>
                               </form>
@@ -135,22 +137,26 @@
           <div class="form-group">
             <label class="col-sm-2 control-label" for="id_content">Description:</label> 
             <div class="col-sm-6">
-              <textarea id="id_content" class="form-control" name="content" maxlength="1000" placeholder="History"></textarea> 
+              <textarea id="id_content" class="form-control code-html" name="content" maxlength="1000" placeholder="History"></textarea> 
             </div>
           </div>
 
           <div class="form-group">
             <div class="col-sm-offset-2 col-sm-6">
-              <div class="loading" style="display:none;">
-                  <span class="load_text">loading...</span>
-              </div>
-              <div class="form_ajax" style="display:none;">
-                  <span>Form submit successfully.</span>
-              </div>
-              <div class="form_ajax_error" style="display:none;">
-                  <span>Can not submit data due to errors.</span>
-              </div>
+
               <button type="submit" class="btn btn-primary">{% trans "New Slide" %}</button>
+              <button type="submit" class="hidden newContentButton btn btn-danger">Update Slide</button>
+             
+                <span class="form_ajax" style="display:none;">
+                    <i class="fa fa-check-circle"></i> Success!
+                </span>
+                <span class="form_ajax_error" style="display:none;">
+                    <i class="fa fa-exclamation-circle"></i> An Error Occured!
+                </span>
+                <span class="loading" style="display:none;">
+                    <i class="fa fa-refresh fa-spin"></i> Loading...
+                </span>
+
             </div>
           </div>
 
@@ -163,7 +169,22 @@
 {% endblock %}
 
 {% block extra_script %}
+<script src="{% static "codemirror/lib/codemirror.js" %}"></script>
+<script src="{% static  "codemirror/addon/selection/active-line.js" %}"></script>
+<script src="{% static "codemirror/addon/edit/matchbrackets.js" %}"></script>
 <script type="text/javascript">
+  jQuery(document).ready(function($) {
+        var code_type = '';
+        $('.code-html').each(function(index) {
+            //$(this).attr('id', 'code-' + index);
+            CodeMirror.fromTextArea(document.getElementById($(this).attr('id')), {
+                    mode: "text/html",
+                    lineNumbers: true,
+                    tabMode: "indent"
+                }
+            );
 
+        });
+    });
 </script>
 {% endblock %}
