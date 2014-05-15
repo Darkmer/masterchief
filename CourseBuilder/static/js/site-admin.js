@@ -14,7 +14,7 @@
   };
 
 	$('#q').keyup(function(){
-      filter(this,'#sortable');
+      filter(this,'#contentList');
   });
 
   var $currentlySelected = null;

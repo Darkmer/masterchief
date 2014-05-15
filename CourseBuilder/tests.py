@@ -1,404 +1,178 @@
 from django.test import TestCase
-from models import Course
-import datetime
+from django.http import HttpRequest
+from models import Teacher, Course, Lesson, Slide
+from views import course_view, lesson_view, slideshow_view
+from django.contrib.auth.models import User
 
-class CourseMethodTest(TestCase):	
-	
+#Run this command in terminal to run unit tests: "python manage.py test"
 
-'''
+def setup(self):
+  print "-----in setup"  
+  user1 = User(username="test1", email="test1@gmail.com", first_name="john", last_name="smith")
+  user2 = User(username="test2", email="test2@gmail.com", first_name="sally", last_name="smith")
+  user1.save()
+  user2.save()
+  
+  teacher1 = Teacher()
+  teacher1.teacher = user1
+  teacher1.save()
+  teacher2 = Teacher()
+  teacher2.teacher = user2
+  teacher2.save()  
 
+  course1 = Course(teacher=teacher1, name="Intro1", position=1)
+  course2 = Course(teacher=teacher2, name="Advanced2", position=2)
+  course1.save()
+  course2.save()
+  
+  lesson1 = Lesson(course=course1, name="Lesson1", description="Intro1 - Lesson1", position=1)
+  lesson2 = Lesson(course=course1, name="Lesson2", description="Intro1 - Lesson2", position=2)
+  lesson1.save()
+  lesson2.save()
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  slide1 = Slide(lesson=lesson1, name="Slide1", content="<h1>Slide1</h1>", position=1, googleStyles=" ")
+  slide2 = Slide(lesson=lesson1, name="Slide2", content="<h1>Slide2</h1>", position=2, googleStyles=" ")
+  slide1.save()
+  slide2.save()
 
 class TeacherMethodTest(TestCase):
+  def test_teacher_insert(self):
+    print "in test_teacher_insert"
+    setup(self)    
+    
+    self.assertEqual(Teacher.objects.count(), 2)
+    user3 = User(username="test3", email="test3@gmail.com", first_name="juan", last_name="garcia")
+    user3.save()
+    teacher3 = Teacher()
+    teacher3.teacher = user3
+    teacher3.save()
+    self.assertEqual(Teacher.objects.count(), 3)
+
+  def test_teacher_delete(self):
+    print "in test_teacher_delete"
+    setup(self)
+
+    self.assertEqual(Teacher.objects.count(), 2)
+    Teacher.objects.get(pk=1).delete()
+    self.assertEqual(Teacher.objects.count(), 1)
+
+class CourseMethodTest(TestCase):	
+  def test_course_insert(self):
+    print "in test_course_insert"
+    setup(self)
+
+    self.assertEqual(Course.objects.count(), 2)
+    course3 = Course(teacher=Teacher.objects.get(pk=1), name="Grad3", position=3)
+    course3.save()
+    self.assertEqual(Course.objects.count(), 3)
+
+  def test_course_delete(self):
+    print "in test_course_delete"
+    setup(self)
+
+    self.assertEqual(Course.objects.count(), 2)
+    Course.objects.get(pk=1).delete()
+    self.assertEqual(Course.objects.count(), 1)
+
+  def test_course_reorder(self):
+    print "in test_course_reorder"
+    setup(self)
+
+    course1 = Course.objects.get(pk=1)
+    course2 = Course.objects.get(pk=2)
+    x = course1.position < course2.position
+    self.assertTrue(x)
+    self.assertEqual(Course.objects.count(), 2)
+
+    course1.position = 2
+    course2.position = 1
+    x = course1.position > course2.position
+    self.assertTrue(x)
 
 class LessonMethodTest(TestCase):
+  def test_lesson_insert(self):
+    print "in test_lesson_insert"
+    setup(self)
+
+    self.assertEqual(Lesson.objects.count(), 2)
+    lesson3 = Lesson(course=Course.objects.get(pk=1), name="Lesson3", description="Third lesson", position=3)
+    lesson3.save()
+    self.assertEqual(Lesson.objects.count(), 3)
+
+  def test_lesson_delete(self):
+    print "in test_lesson_delete"
+    setup(self)
+
+    self.assertEqual(Lesson.objects.count(), 2)
+    Lesson.objects.get(pk=1).delete()
+    self.assertEqual(Lesson.objects.count(), 1)
+
+  def test_lesson_reorder(self):
+    print "in test_lesson_reorder"
+    setup(self)
+    lesson1 = Lesson.objects.get(pk=1)
+    lesson2 = Lesson.objects.get(pk=2)
+    x = lesson1.position < lesson2.position
+    self.assertTrue(x)
+    self.assertEqual(Lesson.objects.count(), 2)
+    
+    lesson1.position = 2
+    lesson2.position = 1
+    x = lesson1.position > lesson2.position
+    self.assertTrue(x)
 
 class SlideMethodTest(TestCase):
+  def test_slide_insert(self):
+    print "in test_slide_insert"
+    setup(self)
 
-class ContentMethodTest(TestCase):
+    self.assertEqual(Slide.objects.count(), 2)
+    slide3 = Slide(lesson=Lesson.objects.get(pk=1), name="Slide3", content="<h1>Slide3</h1>", position=3, googleStyles=" ")
+    slide3.save()
+    self.assertEqual(Slide.objects.count(), 3)
 
-<slide class="logoslide nobackground">
-    <article class="flexbox vcenter">
-      <span><img src="images/google_developers_logo.png"></span>
-    </article>
-  </slide>
+  def test_slide_delete(self):
+    print "in test_slide_delete"
+    setup(self)
+    self.assertEqual(Slide.objects.count(), 2)
+    Slide.objects.get(pk=1).delete()
+    self.assertEqual(Slide.objects.count(), 1)  
 
-  <slide class="title-slide segue nobackground">
-    <aside class="gdbar"><img src="images/google_developers_icon_128.png"></aside>
-    <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
-    <hgroup class="auto-fadein">
-      <h1 data-config-title><!-- populated from slide_config.json --></h1>
-      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
-      <p data-config-presenter><!-- populated from slide_config.json --></p>
-    </hgroup>
-  </slide>
+  def test_slide_reorder(self):
+    print "in test_slide_reorder"
+    setup(self)
+    slide1 = Slide.objects.get(pk=1)
+    slide2 = Slide.objects.get(pk=2)
+    x = slide1.position < slide2.position
+    self.assertTrue(x)
+    self.assertEqual(Slide.objects.count(), 2)
 
-  <slide>
-    <hgroup>
-      <h2>Slide with Bullets</h2>
-    </hgroup>
-    <article>
-      <ul>
-        <li>Titles are formatted as Open Sans with bold applied and font size is set at 45</li>
-        <li>Title capitalization is title case
-          <ul>
-            <li>Subtitle capitalization is title case</li>
-          </ul>
-        </li>
-        <li>Subtitle capitalization is title case</li>
-        <li>Titles and subtitles should never have a period at the end</li>
-      </ul>
-    </article>
-  </slide>
+    slide1.position = 2
+    slide2.position = 1
+    x = slide1.position > slide2.position
+    self.assertTrue(x)
 
-  <slide>
-    <hgroup>
-      <h2>Slide with Bullets that Build</h2>
-      <h3>Subtitle Placeholder</h3>
-    </hgroup>
-    <article>
-      <p>A list where items build:</p>
-      <ul class="build">
-        <li>Pressing 'h' highlights code snippets</li>
-        <li>Pressing 'p' toggles speaker notes (if they're on the current slide)</li>
-        <li>Pressing 'f' toggles fullscreen viewing</li>
-        <li>Pressing 'w' toggles widescreen</li>
-        <li>Pressing 'o' toggles overview mode</li>
-        <li>Pressing 'ESC' toggles off these goodies</li>
-      </ul>
-      <p>Another list, but items fade as they build:</p>
-      <ul class="build fade">
-        <li>Hover over me!</li>
-        <li>Hover over me!</li>
-        <li>Hover over me!</li>
-      </ul>
-    </article>
-  </slide>
+class ControllerTest(TestCase):
+  def test_course_view(self):
+    print "in test_course_view"
+    setup(self)
+    request = HttpRequest()
+    request.user = User.objects.get(pk=1)
+    response = course_view(request)
+    self.assertIn(b'<h3 class="panel-title">Currently Available Courses</h3>', response.content)
 
-  <slide>
-    <hgroup>
-      <h2>Slide with (Smaller Font)</h2>
-    </hgroup>
-    <article class="smaller">
-      <ul>
-        <li>All <a href="http://google.com">links</a> open in new tabs.</li>
-        <li>To change that this, add <code>target="_self"</code> to the link.</li>
-      </ul>
-    </article>
-  </slide>
+  def test_lesson_view(self):
+    print "in test_lesson_view"
+    setup(self)
+    request = HttpRequest()
+    request.user = User.objects.get(pk=1)
+    response = lesson_view(request, 1)
+    self.assertIn(b' - Lessons</h1>', response.content)
 
-  <slide hidden>
-    Hidden slides are left out of the presentation.
-  </slide>
-
-  <slide>
-    <hgroup>
-      <h2>Code Slide (with Subtitle Placeholder)</h2>
-      <h3>Subtitle Placeholder</h3>
-    </hgroup>
-    <article>
-      <p>Press 'h' to highlight important sections of code (wrapped in <code>&lt;b&gt;</code>).</p>
-      <pre class="prettyprint" data-lang="javascript">
-&lt;script type='text/javascript'&gt;
-  // Say hello world until the user starts questioning
-  // the meaningfulness of their existence.
-  function helloWorld(world) {
-    <b>for (var i = 42; --i &gt;= 0;) {
-      alert('Hello ' + String(world));
-    }</b>
-  }
-&lt;/script&gt;
-</pre>
-    </article>
-  </slide>
-
-  <slide>
-    <hgroup>
-      <h2>Code Slide (Smaller Font)</h2>
-    </hgroup>
-    <article class="smaller">
-      <pre class="prettyprint" data-lang="javascript">
-// Say hello world until the user starts questioning
-// the meaningfulness of their existence.
-function helloWorld(world) {
-  for (var i = 42; --i &gt;= 0;) {
-    alert('Hello ' + String(world));
-  }
-}
-</pre>
-<pre class="prettyprint" data-lang="css">
-&lt;style&gt;
-  p { color: pink }
-  b { color: blue }
-&lt;/style&gt;
-</pre>
-<pre class="prettyprint" data-lang="html">
-&lt;!DOCTYPE html>
-&lt;html>
-&lt;head>
-  &lt;title>My Awesome Page&lt;/title>
-&lt;/head>
-&lt;body>
-  &lt;p&gt;Hello world&lt;/p&gt;
-&lt;body>
-&lt;/html>
-</pre>
-    </article>
-  </slide>
-
-  <slide>
-    <aside class="note">
-      <section>
-        <ul>
-          <li>Point I wanted to make #1</li>
-          <li>Point I wanted to make #2</li>
-          <li>Point I wanted to make #3</li>
-          <li>Example <a href="#">link</a> in notes.</li>
-        </ul>
-        <p><b>Remember to say this tag line!</b></p>
-      </section>
-    </aside>
-    <hgroup>
-      <h2>Slide with Speaker Notes</h2>
-    </hgroup>
-    <article>
-      <p>Press 'p' to toggle speaker notes.</p>
-    </article>
-  </slide>
-
-  <slide>
-    <aside class="note">
-      <section>
-        <ul>
-          <li>See this amazing link: <a href="http://www.google.com">link</a>.</li>
-        </ul>
-        <p><b>Remember to say this tag line!</b></p>
-      </section>
-    </aside>
-    <hgroup>
-      <h2>Presenter Mode</h2>
-    </hgroup>
-    <article>
-      <p>Add <code><a href="?presentme=true" target="_self">?presentme=true</a></code> to the URL to enabled presenter mode.
-      This setting is sticky, meaning refreshing the page will persist presenter
-      mode.</p>
-      <p>Hit <code><a href="?presentme=false" target="_self">?presentme=false</a></code> to disable presenter mode.</p>
-    </article>
-  </slide>
-
-  <slide>
-    <hgroup>
-      <h2>Slide with Image</h2>
-    </hgroup>
-    <article>
-      <img src="images/chart.png" class="reflect" alt="Description" title="Description">
-      <footer class="source">source: place source info here</footer>
-    </article>
-  </slide>
-
-  <slide>
-    <hgroup>
-      <h2>Slide with Image (Centered horz/vert)</h2>
-    </hgroup>
-    <article class="flexbox vcenter">
-      <img src="images/barchart.png" alt="Description" title="Description">
-      <footer class="source">source: place source info here</footer>
-    </article>
-  </slide>
-
-  <slide>
-    <hgroup>
-      <h2>Table Option A</h2>
-      <h3>Subtitle Placeholder</h3>
-    </hgroup>
-    <article>
-      <table>
-        <tr>
-          <th></th><th>Column 1</th><th>Column 2</th><th>Column 3</th><th>Column 4</th>
-        </tr>
-        <tr>
-          <td>Row 1</td><td>placeholder</td><td class="highlight">placeholder</td><td>placeholder</td><td>placeholder</td>
-        </tr>
-        <tr>
-          <td>Row 2</td><td>placeholder</td><td>placeholder</td><td>placeholder</td><td>placeholder</td>
-        </tr>
-        <tr>
-          <td>Row 3</td><td>placeholder</td><td>placeholder</td><td>placeholder</td><td>placeholder</td>
-        </tr>
-        <tr>
-          <td>Row 4</td><td>placeholder</td><td>placeholder</td><td>placeholder</td><td>placeholder</td>
-        </tr>
-        <tr>
-          <td>Row 5</td><td>placeholder</td><td>placeholder</td><td>placeholder</td><td>placeholder</td>
-        </tr>
-      </table>
-    </article>
-  </slide>
-
-  <slide>
-    <hgroup>
-      <h2>Table Option A (Smaller Text)</h2>
-      <h3>Subtitle Placeholder</h3>
-    </hgroup>
-    <article class="smaller">
-      <table>
-        <tr>
-          <th></th><th>Column 1</th><th>Column 2</th><th>Column 3</th><th>Column 4</th>
-        </tr>
-        <tr>
-          <td>Row 1</td><td>placeholder</td><td class="highlight">placeholder</td><td>placeholder</td><td>placeholder</td>
-        </tr>
-        <tr>
-          <td>Row 2</td><td>placeholder</td><td>placeholder</td><td>placeholder</td><td>placeholder</td>
-        </tr>
-        <tr>
-          <td>Row 3</td><td>placeholder</td><td>placeholder</td><td>placeholder</td><td>placeholder</td>
-        </tr>
-        <tr>
-          <td>Row 4</td><td>placeholder</td><td>placeholder</td><td>placeholder</td><td>placeholder</td>
-        </tr>
-        <tr>
-          <td>Row 5</td><td>placeholder</td><td>placeholder</td><td>placeholder</td><td>placeholder</td>
-        </tr>
-      </table>
-    </article>
-  </slide>
-
-  <slide>
-    <hgroup>
-      <h2>Table Option B</h2>
-      <h3>Subtitle Placeholder</h3>
-    </hgroup>
-    <article>
-      <table class="rows">
-        <tr>
-          <th>Header 1</th><td>placeholder</td><td class="highlight">placeholder</td><td>placeholder</td>
-        </tr>
-        <tr>
-          <th>Header 2</th><td>placeholder</td><td>placeholder</td><td>placeholder</td>
-        </tr>
-        <tr>
-          <th>Header 3</th><td>placeholder</td><td>placeholder</td><td>placeholder</td>
-        </tr>
-        <tr>
-          <th>Header 4</th><td>placeholder</td><td>placeholder</td><td>placeholder</td>
-        </tr>
-        <tr>
-          <th>Header 5</th><td>placeholder</td><td>placeholder</td><td>placeholder</td>
-        </tr>
-      </table>
-    </article>
-  </slide>
-
-  <slide>
-    <hgroup>
-      <h2>Slide Styles</h2>
-    </hgroup>
-    <article class="smaller">
-      <div class="columns-2">
-        <ul>
-          <li class="red">class="red"</li>
-          <li class="red2">class="red2"</li>
-          <li class="red3">class="red3"</li>
-          <li class="blue">class="blue"</li>
-          <li class="blue2">class="blue2"</li>
-          <li class="blue3">class="blue3"</li>
-          <li class="green">class="green"</li>
-          <li class="green2">class="green2"</li>
-        </ul>
-        <ul>
-          <li class="green3">class="green3"</li>
-          <li class="yellow">class="yellow"</li>
-          <li class="yellow2">class="yellow2"</li>
-          <li class="yellow3">class="yellow3"</li>
-          <li class="gray">class="gray"</li>
-          <li class="gray2">class="gray2"</li>
-          <li class="gray3">class="gray3"</li>
-          <li class="gray4">class="gray4"</li>
-        </ul>
-      </div>
-      <div class="centered" style="margin-top:2em">
-        I am centered text with a <button>Button</button> and <button disabled>Disabled</button> button.
-      </div>
-    </article>
-  </slide>
-
-  <slide class="segue dark nobackground">
-    <aside class="gdbar"><img src="images/google_developers_icon_128.png"></aside>
-    <hgroup class="auto-fadein">
-      <h2>Segue Slide</h2>
-      <h3>Subtitle Placeholder</h3>
-    </hgroup>
-  </slide>
-
-  <slide class="fill nobackground" style="background-image: url(images/sky.jpg)">
-    <hgroup>
-      <h2 class="white">Full Image (with Optional Header)</h2>
-    </hgroup>
-    <footer class="source white">www.flickr.com/photos/25797459@N06/5438799763/</footer>
-  </slide>
-
-  <slide class="segue dark quote nobackground">
-    <aside class="gdbar right bottom"><img src="images/google_developers_icon_128.png"></aside>
-    <article class="flexbox vleft auto-fadein">
-      <q>
-        This is an example of quote text.
-      </q>
-      <div class="author">
-        Name<br>
-        Company
-      </div>
-    </article>
-  </slide>
-
-  <slide>
-    <hgroup>
-      <h2>Slide with Iframe</h2>
-    </hgroup>
-    <article>
-      <iframe data-src="http://www.google.com/doodle4google/resources/history.html"></iframe>
-    </article>
-  </slide>
-
-  <slide>
-    <article>
-      <iframe data-src="http://www.google.com/doodle4google/resources/history.html"></iframe>
-    </article>
-  </slide>
-
-  <slide class="thank-you-slide segue nobackground">
-    <aside class="gdbar right"><img src="images/google_developers_icon_128.png"></aside>
-    <article class="flexbox vleft auto-fadein">
-      <h2>&lt;Thank You!&gt;</h2>
-      <p>Important contact information goes here.</p>
-    </article>
-    <p class="auto-fadein" data-config-contact>
-      <!-- populated from slide_config.json -->
-    </p>
-  </slide>
-
-  <slide class="logoslide dark nobackground">
-    <article class="flexbox vcenter">
-      <span><img src="images/google_developers_logo_white.png"></span>
-    </article>
-  </slide>
-
-  <slide class="backdrop"></slide>
-'''
+  def test_slideshow_view(self):
+    print "in test_slideshow_view"
+    setup(self)
+    request = HttpRequest()
+    request.user = User.objects.get(pk=1)
+    response = slideshow_view(request, 1, 1)
+    self.assertIn(b'<div class="slide">', response.content)  

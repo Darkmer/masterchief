@@ -300,25 +300,6 @@ def slide_admin_reorder(request):
     else:
         return HttpResponseNotFound('You do not have permission to access this page!')
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #APP USER views
 def course_view(request):
     print "course view called"
@@ -349,7 +330,7 @@ def lesson_view(request, course_id):
 
 def slideshow_view(request, course_id, lesson_id):
 	#Generate Google SlideShow view for user
-    print "slideshow view called " + lesson_id
+    print "slideshow view called "
 
     try:
         course = Course.objects.get(pk=course_id)

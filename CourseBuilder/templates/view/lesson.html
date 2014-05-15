@@ -18,14 +18,14 @@
                 <h3 class="panel-title">Reorder and Select Elements</h3>
               </div>-->
               <div class="panel-body">
-                <form method="get" autocomplete="off" role="search">
+                <!--<form method="get" autocomplete="off" role="search">
                    <div class="form-group col-md-8">
-                        <input id ="q" name="q" type="text" class="form-control" placeholder="Search">
+                        <input id="q" name="q" type="text" class="form-control" placeholder="Search">
                     </div>
                     <button type="submit" class="btn btn-primary">Create New</button>
-                </form>
+                </form>-->
                 <hr>
-                <ul>
+                <ul id="contentList">
                   {% if lessons %}
                       {% for lesson in lessons %}
                         <p>
