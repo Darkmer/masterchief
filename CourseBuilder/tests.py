@@ -6,8 +6,7 @@ from django.contrib.auth.models import User
 
 #Run this command in terminal to run unit tests: "python manage.py test"
 
-def setup(self):
-  print "-----in setup"  
+def setup(self):  
   user1 = User(username="test1", email="test1@gmail.com", first_name="john", last_name="smith")
   user2 = User(username="test2", email="test2@gmail.com", first_name="sally", last_name="smith")
   user1.save()
