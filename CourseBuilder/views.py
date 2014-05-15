@@ -314,6 +314,9 @@ def about_view(request):
 	print "about view called"
 	return render(request, 'view/about.html')
 
+def tutorial_view(request):
+	print "tutorial view called"
+	return render(request, 'view/tutorial.html')
 
 def lesson_view(request, course_id):
     print "lesson view called"

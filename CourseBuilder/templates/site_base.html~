@@ -11,6 +11,7 @@
     <link href="{% static "pinax/css/theme.css" %}" rel="stylesheet">
     <link href="{% static "css/site.css" %}" rel="stylesheet">
     <link href="{% static "css/site-main.css" %}" rel="stylesheet">
+
     {% block extra_style %}{% endblock %}
 {% endblock %}
 
@@ -21,7 +22,7 @@
 
 {% block nav %}
 <ul class="nav navbar-nav pull-left">
-	<li><img src="{% static "images/logo.png" %}" alt="CourseBuilder" height=100 width =100 class="img-responsive"></li>    
+	<li><img src="{% static "images/logo.png" %}" alt="CourseBuilder" height=50 width =50 class="img-responsive"></li>    
 	<li><a href="{% url 'slide_admin' 0 1 %}">{% trans "Slide Admin" %}</a></li>
  	<li><a href="/courses">{% trans "Browse Courses" %}</a></li>
 	<li><a href="/about">{% trans "About Us" %}</a></li>
@@ -44,6 +45,50 @@
     <script src="{% static "js/bootstrap.min.js" %}"></script>
     <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
     <script src="{% static "pinax/js/theme.js" %}"></script>
+    <script type="text/javascript" src="http://malsup.github.com/min/jquery.form.min.js"></script>
     <script src="{% static "js/site-admin.js" %}"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie != '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+        return cookieValue;
+        }
+
+        var csrftoken = getCookie('csrftoken');
+
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        $.ajaxSetup({
+            crossDomain: false, // obviates need for sameOrigin test
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type)) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+
+        var display_message = function(msg, elem) {
+            var msg_div = $('<div><p>'+msg+'</p></div>');
+            elem.append(msg_div).fadeIn('slow').animate({opacity: 1.0}, 7000).fadeOut('slow',function() { msg_div.remove(); });
+        };
+});
+</script>
+</script>
+
     {% block extra_script %}{% endblock %}
 {% endblock %}
