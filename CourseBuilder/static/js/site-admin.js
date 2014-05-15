@@ -186,7 +186,7 @@ $(document).ready(function() {
 
   }();
 
-    $("div.panel-body").on("keyup", ".tab-subject", function (e) {
+    $("div.panel-body").on("keyup change", ".tab-subject", function (e) {
       e.preventDefault();
       var tabId = $(this).parents(".tab-pane").attr('id');
        $('#admin-content-tabs a[href="#' + tabId + '"] span').html(this.value);

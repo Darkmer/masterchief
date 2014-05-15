@@ -25,7 +25,8 @@ def course_admin(request):
     course_set = formset_factory(CourseForm, extra=max_num, max_num=max_num)
     courses = Course.objects.order_by('position').all()
 
-    keys = [c.pk for c in courses]
+
+    keys = [(c.pk, c.teacher_id) for c in courses]
     forms = course_set(initial=courses.values())
     forms = zip(forms, keys)
     return render(request, 'admin/course.html', {

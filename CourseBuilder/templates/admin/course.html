@@ -10,6 +10,7 @@
     <div class="admin">
         <div class="page-header">
           <h1>Administration <small>Courses</small></h1>
+          <p class="lead">Go to <i>admin</i> in {{ user.username }} dropdown menu to add or edit teachers</p>
         </div>
       <!-- Example row of columns -->
       <div class="row">
@@ -38,7 +39,7 @@
 
                         <div class={% if forloop.first %}"tab-pane active"{% else %}"tab-pane"{% endif %} id="tab-{{ forloop.counter }}">
 
-                            <form id="{{tabForm.prefix}}" class="form-horizontal" role="form" method="post" action="{% url 'course_admin_update' key tabForm.prefix %}">
+                            <form id="{{tabForm.prefix}}" class="form-horizontal" role="form" method="post" action="{% url 'course_admin_update' key.0 tabForm.prefix %}">
                               {{ tabForm.non_field_errors }}
                               {% csrf_token %}
                               <div class="form-group">
@@ -47,7 +48,7 @@
                                                          
                                   <select id="{{tabForm.teacher.auto_id}}" class="form-control" name="{{ tabForm.teacher.html_name }}">
                                    {% for id, name in tabForm.teacher.field.choices %}
-                                    {% if name ==  tabForm.teacher.data %}
+                                    {% if id ==  key.1 %}
                                      <option value="{{ id }}" selected="selected">{{ name }}</option>
                                      {% else %}
                                       <option value="{{ id }}">{{ name }}</option>
@@ -74,7 +75,7 @@
                                 <div class="col-sm-offset-2 col-sm-6">
                                 <button type="submit" class="btn btn-danger">{% trans "Update Course" %}</button>
 
-                                <a href="{% url 'lesson_admin' key %}" class="btn btn-success">{% trans "View Lessons" %}</a>
+                                <a href="{% url 'lesson_admin' key.0 %}" class="btn btn-success">{% trans "View Lessons" %}</a>
                                 
                                   <span class="form_ajax" style="display:none;">
                                       <i class="fa fa-check-circle"></i> Success!
