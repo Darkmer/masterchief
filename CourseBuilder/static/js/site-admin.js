@@ -42,7 +42,7 @@ $(document).ready(function() {
           $('.loading').hide();
           $('textarea').removeAttr('disabled');
           $('input').removeAttr('disabled');
-          $('input').removeAttr('disabled', 'disabled');
+          $('select').removeAttr('disabled');
           $('.errorlist').remove();
       }
 
@@ -59,7 +59,7 @@ $(document).ready(function() {
                 $("#" + tabId + " .btn-primary").hide();
                 $("#" + tabId + " .newContentButton").removeClass('hidden');
                 var nextContent = $("#" + tabId + " a.newContentButton");
-                if(nextContent){
+                if(nextContent.attr('href')){
                   nextContent.attr('href', nextContent.attr('href').replace("/0/", "/"+ data.created_object_id + "/"));                  
                 }
               }

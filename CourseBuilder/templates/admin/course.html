@@ -73,9 +73,10 @@
 
                               <div class="form-group">
                                 <div class="col-sm-offset-2 col-sm-6">
+                                 <a href="{% url 'lesson_admin' key.0 %}" class="btn btn-success">{% trans "View Lessons" %}</a>
                                 <button type="submit" class="btn btn-danger">{% trans "Update Course" %}</button>
 
-                                <a href="{% url 'lesson_admin' key.0 %}" class="btn btn-success">{% trans "View Lessons" %}</a>
+
                                 
                                   <span class="form_ajax" style="display:none;">
                                       <i class="fa fa-check-circle"></i> Success!
@@ -136,8 +137,8 @@
           <div class="form-group">
             <div class="col-sm-offset-2 col-sm-6">
               <button type="submit" class="btn btn-primary">{% trans "New Course" %}</button>
-            <button type="submit" class="hidden newContentButton btn btn-danger">Update Course</button>
             <a href="{% url 'lesson_admin' 0 %}" class="hidden newContentButton btn btn-success">{% trans "View Lessons" %}</a>
+            <button type="submit" class="hidden newContentButton btn btn-danger">Update Course</button>
               <span class="form_ajax" style="display:none;">
                   <i class="fa fa-check-circle"></i> Success!
               </span>
