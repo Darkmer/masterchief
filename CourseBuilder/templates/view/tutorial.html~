@@ -1,0 +1,61 @@
+{% extends "site_base.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% block head_title %}{% trans "Welcome" %}{% endblock %}
+
+{% block body %}
+    <div class="jumbotron" >
+      <div class="container">
+        <h1>Slide Creation Tutorial</h1>
+		<h2>Basics</h2>        
+		<img class="img-rounded" height = 600 width = 700 src="{% static "images/tutorial.png" %}">
+      	<p>This is the slide creation screen</p>
+
+		<p> Notice there is a special <b>snytax</b> needed to input working slides</p>
+
+		<ul>
+		<li> The title of the slide is contained in &lt;h1&gt; ... &lt;/h1&gt; </li>
+		<li> Non bulleted text is contained in &lt;p&gt; ... &lt;/p&gt; </li>
+		<li> A bulleted list is contained in &lt;ol&gt; ... &lt;/ol&gt; </li>		
+		<li> A bulleted line in a bulleted list is contained in &lt;li&gt; ... &lt;/li&gt; </li>		
+		</ul>
+
+		<h2>How to Operate</h2> 
+
+		<ul>
+		<li>Advance to next slide with mouse click, space bar or swipe left</li>
+
+		<li>Move forward/backward between slides with Cursor Left,
+		Cursor Right, <strong>Pg Up</strong> and <strong>Pg Dn</strong>
+		keys, or swipe left or right</li>
+
+		<li><strong>Home</strong> key for first slide, <strong>End</strong>
+		 key for last slide</li>
+
+		<li>The "<strong>C</strong>" key for an automatically generated
+		table of contents, or click on "contents" on the toolbar or
+		swipe up or down</li>
+
+		<li>Function <strong>F11</strong> to go full screen and back</li>
+
+		<li>The "<strong>F</strong>" key toggles the display of the footer</li>
+
+		<li>The "<strong>A</strong>" key toggles display of current vs all
+		slides</li>
+		</ul>
+
+
+		<h2>Incremental Slides</h2>
+		<ul>
+		<li>For incremental display, use class="incremental" in that line's tag</li>
+
+		<li>Note: you will see a red asterisk on the left of the toolbar
+		when there is still something more to reveal.</li>
+		</ul>
+
+	  </div>
+    </div>
+{% endblock %}
+
+

@@ -50,3 +50,8 @@ urlpatterns += patterns('CourseBuilder.views',
 urlpatterns += patterns('CourseBuilder.views',
 	url(r'^about/', 'about_view', name="about_view")
 )
+
+# ABOUT VIEW
+urlpatterns += patterns('CourseBuilder.views',
+	url(r'^tutorial/', 'tutorial_view', name="tutorial_view")
+)
